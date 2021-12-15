@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"
+    xsd:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service autowire="true" id="behat_doctrine.database_helper" class="BehatDoctrineBundle\Database\DatabaseHelper">
+            <argument key="$persisterLoader" type="service" id="fidry_alice_data_fixtures.doctrine.persister_loader"/>
+        </service>
+    </services>
+</container>
