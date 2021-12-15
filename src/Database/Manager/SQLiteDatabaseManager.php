@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BehatDoctrineBundle\Database\Manager;
+namespace BehatDoctrineFixtures\Database\Manager;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\ORM\Tools\SchemaTool;

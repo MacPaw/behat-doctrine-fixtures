@@ -4,9 +4,8 @@
     xsd:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service autowire="true" id="behat_doctrine.database_context" class="BehatDoctrineBundle\Context\DatabaseContext">
-            <argument key="$dataFixturesPath">%kernel.project_dir%/tests/DataFixtures/ORM</argument>
-            <argument key="$databaseHelper" type="service" id="behat_doctrine.database_helper"/>
+        <service autowire="true" id="behat_doctrine_fixtures.database_context" class="BehatDoctrineFixtures\Context\DatabaseContext">
+            <argument key="$databaseHelper" type="service" id="behat_doctrine_fixtures.database_helper"/>
         </service>
     </services>
 </container>

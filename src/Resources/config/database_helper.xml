@@ -4,8 +4,9 @@
     xsd:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service autowire="true" id="behat_doctrine.database_helper" class="BehatDoctrineBundle\Database\DatabaseHelper">
-            <argument key="$persisterLoader" type="service" id="fidry_alice_data_fixtures.doctrine.persister_loader"/>
+        <service autowire="true" id="behat_doctrine_fixtures.database_helper" class="BehatDoctrineFixtures\Database\DatabaseHelper">
+            <argument key="$fixturesLoader" type="service" id="fidry_alice_data_fixtures.doctrine.persister_loader"/>
+            <argument key="$cacheDir">%kernel.cache_dir%</argument>
         </service>
     </services>
 </container>

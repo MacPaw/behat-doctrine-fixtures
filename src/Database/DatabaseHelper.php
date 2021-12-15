@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace BehatDoctrineBundle\Database;
+namespace BehatDoctrineFixtures\Database;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Fidry\AliceDataFixtures\Bridge\Doctrine\Persister\ObjectManagerPersister;
 use Fidry\AliceDataFixtures\Loader\PersisterLoader;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
-use BehatDoctrineBundle\Database\Manager\DatabaseManager;
+use BehatDoctrineFixtures\Database\Manager\DatabaseManager;
 
 class DatabaseHelper
 {

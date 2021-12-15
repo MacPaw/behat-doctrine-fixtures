@@ -10,7 +10,7 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="Behat Doctrine Context Test Suite">
+        <testsuite name="Behat Doctrine Fixtures Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>

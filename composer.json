@@ -1,6 +1,6 @@
 {
-    "name": "macpaw/behat-doctrine-bundle",
-    "type": "library",
+    "name": "macpaw/behat-doctrine-fixtures",
+    "type": "symfony-bundle",
     "description": "Bundle for creating Doctrine fixtures",
     "keywords": [
         "MacPaw",
@@ -8,6 +8,7 @@
         "behat",
         "BDD",
         "Context",
+        "Doctrine",
         "Fixture"
     ],
     "authors": [
@@ -42,12 +43,12 @@
     },
     "autoload": {
         "psr-4": {
-            "BehatDoctrineContext\\": "src"
+            "BehatDoctrineBundle\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BehatDoctrineContext\\Tests\\": "tests"
+            "BehatDoctrineBundle\\Tests\\": "tests"
         }
     },
     "scripts": {

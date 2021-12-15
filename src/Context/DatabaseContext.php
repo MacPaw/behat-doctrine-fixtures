@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace BehatDoctrineBundle\Context;
+namespace BehatDoctrineFixtures\Context;
 
-use BehatDoctrineBundle\Database\DatabaseHelper;
+use BehatDoctrineFixtures\Database\DatabaseHelper;
 use Behat\Behat\Context\Context;
 use InvalidArgumentException;
 

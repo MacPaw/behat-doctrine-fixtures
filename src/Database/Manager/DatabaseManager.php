@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BehatDoctrineBundle\Database\Manager;
+namespace BehatDoctrineFixtures\Database\Manager;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;

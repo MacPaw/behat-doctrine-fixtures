@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace BehatDoctrineBundle\Database;
+namespace BehatDoctrineFixtures\Database;
 
 use Doctrine\DBAL\Platforms\PostgreSQL100Platform;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use BehatDoctrineBundle\Database\Exception\DatabaseManagerNotFoundForCurrentPlatform;
-use BehatDoctrineBundle\Database\Manager\DatabaseManager;
-use BehatDoctrineBundle\Database\Manager\PgSqlDatabaseManager;
-use BehatDoctrineBundle\Database\Manager\SQLiteDatabaseManager;
+use BehatDoctrineFixtures\Database\Exception\DatabaseManagerNotFoundForCurrentPlatform;
+use BehatDoctrineFixtures\Database\Manager\DatabaseManager;
+use BehatDoctrineFixtures\Database\Manager\PgSqlDatabaseManager;
+use BehatDoctrineFixtures\Database\Manager\SQLiteDatabaseManager;
 
 class DatabaseManagerFactory
 {

@@ -1,4 +1,4 @@
-# Contribute to BehatDoctrineContext
+# Contribute to BehatDoctrineFixtures
 
 Thank you for contributing!
 

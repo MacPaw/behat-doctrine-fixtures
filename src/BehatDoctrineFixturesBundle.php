@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace BehatDoctrineBundle;
+namespace BehatDoctrineFixtures;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class BehatDoctrineBundle extends Bundle
+class BehatDoctrineFixturesBundle extends Bundle
 {
 
 }

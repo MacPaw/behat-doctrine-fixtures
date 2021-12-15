@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BehatDoctrineBundle\Database\Manager;
+namespace BehatDoctrineFixtures\Database\Manager;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;

@@ -1,6 +1,6 @@
 <?php
 
-namespace BehatDoctrineBundle\Database\Exception;
+namespace BehatDoctrineFixtures\Database\Exception;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Exception;
