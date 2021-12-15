@@ -10,7 +10,7 @@ use InvalidArgumentException;
 
 class DatabaseContext implements Context
 {
-    protected ?DatabaseHelper $databaseHelper;
+    protected DatabaseHelper $databaseHelper;
     protected string $dataFixturesPath;
 
     public function __construct(

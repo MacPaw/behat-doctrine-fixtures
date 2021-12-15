@@ -31,15 +31,14 @@ class DatabaseHelper
         $this->cacheDir = $cacheDir;
     }
 
+    /**
+     * @param array<string> $fixtures
+     */
     public function loadFixtures(array $fixtures = []): void
     {
-        if ($cacheDriver = $this->entityManager->getMetadataFactory()->getCacheDriver()) {
-            $cacheDriver->deleteAll();
-        }
-
         $databaseManager = $this->getDatabaseManager();
 
-        if($databaseManager->backupExists($fixtures)) {
+        if ($databaseManager->backupExists($fixtures)) {
             $databaseManager->loadBackup($fixtures);
             return;
         }

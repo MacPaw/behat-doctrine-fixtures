@@ -15,18 +15,18 @@ use BehatDoctrineFixtures\Database\Manager\SQLiteDatabaseManager;
 
 class DatabaseManagerFactory
 {
-    static function createDatabaseManager(
+    public static function createDatabaseManager(
         EntityManagerInterface $entityManager,
         LoggerInterface $logger,
         string $cacheDir
     ): DatabaseManager {
         $databasePlatform = $entityManager->getConnection()->getDatabasePlatform();
 
-        if($databasePlatform instanceof SqlitePlatform){
+        if ($databasePlatform instanceof SqlitePlatform) {
             return new SQLiteDatabaseManager($entityManager, $logger, $cacheDir);
         }
 
-        if($databasePlatform instanceof PostgreSQL100Platform){
+        if ($databasePlatform instanceof PostgreSQL100Platform) {
             return new PgSqlDatabaseManager($entityManager, $logger, $cacheDir);
         }
 

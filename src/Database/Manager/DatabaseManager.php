@@ -14,13 +14,14 @@ abstract class DatabaseManager
 
     protected EntityManagerInterface $entityManager;
 
-    protected $schemaCreated = false;
+    protected bool $schemaCreated = false;
 
     protected string $cacheDir;
 
-    private $logger;
+    private LoggerInterface $logger;
 
-    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, string $cacheDir){
+    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, string $cacheDir)
+    {
         $this->connection = $entityManager->getConnection();
         $this->entityManager = $entityManager;
         $this->logger = $logger;
@@ -29,16 +30,28 @@ abstract class DatabaseManager
 
     abstract public function prepareSchema(): void;
 
+    /**
+     * @param array<string> $fixtures
+     */
     abstract public function saveBackup(array $fixtures): void;
 
+    /**
+     * @param array<string> $fixtures
+     */
     abstract public function loadBackup(array $fixtures): void;
 
+    /**
+     * @param array<string> $fixtures
+     */
     abstract protected function getBackupFilename(array $fixtures): string;
-    
+
+    /**
+     * @param array<string> $fixtures
+     */
     public function backupExists(array $fixtures): bool
     {
         $backupFilename = $this->getBackupFilename($fixtures);
-        if(file_exists($backupFilename)){
+        if (file_exists($backupFilename)) {
             return true;
         }
 
@@ -47,6 +60,9 @@ abstract class DatabaseManager
 
     abstract protected function getDatabaseName(): string;
 
+    /**
+     * @param array<array> $context
+     */
     protected function log(string $message, array $context = []): void
     {
         $this->logger->info($message, $context);

@@ -9,6 +9,9 @@ use Doctrine\ORM\Tools\SchemaTool;
 
 class SQLiteDatabaseManager extends DatabaseManager
 {
+    /**
+     * @param array<string> $fixtures
+     */
     public function saveBackup(array $fixtures): void
     {
         $databasePath = $this->getDatabaseName();
@@ -19,6 +22,9 @@ class SQLiteDatabaseManager extends DatabaseManager
         $this->log('Database backup saved', ['fixtures' => $fixtures]);
     }
 
+    /**
+     * @param array<string> $fixtures
+     */
     public function loadBackup(array $fixtures): void
     {
         $backupFileName = $this->getBackupFilename($fixtures);
@@ -35,7 +41,7 @@ class SQLiteDatabaseManager extends DatabaseManager
 
     public function prepareSchema(): void
     {
-        if($this->schemaCreated){
+        if ($this->schemaCreated) {
             $this->loadBackup([]);
         }
 
@@ -52,15 +58,14 @@ class SQLiteDatabaseManager extends DatabaseManager
         #todo Think about how to get rid of this try
         try {
             $this->connection->executeStatement("DROP table v_product_plan");
-        }
-        catch (\Throwable $ex){
+        } catch (\Throwable $ex) {
         }
 
         $schema = $schemaTool->getSchemaFromMetadata($metadata);
         $this->adaptDatabaseSchemaToSqlite($schema);
         $createSchemaSql = $schema->toSql($this->connection->getDatabasePlatform());
 
-        foreach ($createSchemaSql as $sql){
+        foreach ($createSchemaSql as $sql) {
             $this->connection->executeStatement($sql);
         }
 
@@ -82,6 +87,9 @@ class SQLiteDatabaseManager extends DatabaseManager
         }
     }
 
+    /**
+     * @param array<string> $fixtures
+     */
     protected function getBackupFilename(array $fixtures): string
     {
         $databaseName = $this->getDatabaseName();

@@ -45,9 +45,6 @@ class BehatDoctrineFixturesExtension extends Extension
         }
     }
 
-    /**
-     * @param array<array> $config
-     */
     private function loadDatabaseHelper(
         XmlFileLoader $loader
     ): void {

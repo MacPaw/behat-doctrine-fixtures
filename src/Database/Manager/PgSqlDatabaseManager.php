@@ -9,6 +9,9 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 
 class PgSqlDatabaseManager extends DatabaseManager
 {
+    /**
+     * @param array<string> $fixtures
+     */
     public function saveBackup(array $fixtures): void
     {
         $backupFilename = $this->getBackupFilename($fixtures);
@@ -26,16 +29,20 @@ class PgSqlDatabaseManager extends DatabaseManager
         $additionalParams = "--exclude-table=migration_versions --no-comments --disable-triggers --data-only";
         $appendStderrFile = "2> {$this->cacheDir}/pg_dump_log.txt";
 
-        exec("{$password} pg_dump -U{$user} -h{$host} -p{$port} {$additionalParams} {$databaseName} > {$backupFilename} {$appendStderrFile}");
+        exec("{$password} pg_dump -U{$user} -h{$host} -p{$port} {$additionalParams} {$databaseName} > 
+            {$backupFilename} {$appendStderrFile}");
 
         $this->log('Database backup saved', ['fixtures' => $fixtures]);
     }
 
+    /**
+     * @param array<string> $fixtures
+     */
     public function loadBackup(array $fixtures): void
     {
         $this->dropData();
 
-        if(empty($fixtures)){
+        if (empty($fixtures)) {
             return;
         }
 
@@ -53,7 +60,7 @@ class PgSqlDatabaseManager extends DatabaseManager
 
     public function prepareSchema(): void
     {
-        if(!$this->schemaCreated){
+        if (!$this->schemaCreated) {
             $this->createSchema();
         }
 
@@ -79,13 +86,21 @@ class PgSqlDatabaseManager extends DatabaseManager
         $this->restartSequences();
     }
 
-    private function restartSequences() {
-        $sequences = $this->connection->executeQuery('SELECT * FROM information_schema.sequences')->fetchAllAssociative();
-        foreach ($sequences as $sequence){
-            $this->connection->executeStatement(sprintf('ALTER SEQUENCE %s RESTART WITH 1', $sequence['sequence_name']));
+    private function restartSequences(): void
+    {
+        $sequences = $this->connection->executeQuery('SELECT * FROM information_schema.sequences')
+            ->fetchAllAssociative();
+
+        foreach ($sequences as $sequence) {
+            $this->connection->executeStatement(
+                sprintf('ALTER SEQUENCE %s RESTART WITH 1', $sequence['sequence_name'])
+            );
         }
     }
 
+    /**
+     * @param array<string> $fixtures
+     */
     protected function getBackupFilename(array $fixtures): string
     {
         $databaseName = $this->getDatabaseName();
@@ -93,7 +108,7 @@ class PgSqlDatabaseManager extends DatabaseManager
         return sprintf('%s/%s_%s.sql', $this->cacheDir, $databaseName, md5(serialize($fixtures)));
     }
 
-    function createDatabase(): void
+    private function createDatabase(): void
     {
         exec('bin/console d:d:create');
 

@@ -59,8 +59,7 @@
         "dev-checks": [
             "composer validate",
             "@phpstan",
-            "@code-style",
-            "@phpunit"
+            "@code-style"
         ]
     }
 }
