@@ -1,5 +1,5 @@
 {
-  "name": "behat-dcotrine-fixtures",
+  "name": "behat-doctrine-fixtures",
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
@@ -12,11 +12,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MacPaw/BehatDoctrineBundle.git"
+    "url": "git+https://github.com/MacPaw/BehatDoctrineFixtures.git"
   },
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MacPaw/BehatDoctrineBundle/issues"
+    "url": "https://github.com/MacPaw/BehatDoctrineFixtures/issues"
   },
-  "homepage": "https://github.com/MacPaw/BehatDoctrineBundle#readme"
+  "homepage": "https://github.com/MacPaw/BehatDoctrineFixtures#readme"
 }
