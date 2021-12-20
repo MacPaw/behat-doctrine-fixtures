@@ -40,7 +40,7 @@ class BehatDoctrineFixturesExtension extends Extension
         if ($databaseContextConfig['enabled']) {
             $loader->load('database_context.xml');
 
-            $databaseContextDefinition = $container->findDefinition('behat_doctrine.database_context');
+            $databaseContextDefinition = $container->findDefinition('behat_doctrine_fixtures.database_context');
             $databaseContextDefinition->setArgument('$dataFixturesPath', $databaseContextConfig['dataFixturesPath']);
         }
     }

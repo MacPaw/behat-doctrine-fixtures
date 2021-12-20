@@ -7,7 +7,7 @@ namespace BehatDoctrineFixtures\Database\Manager;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 
-class PgSqlDatabaseManager extends DatabaseManager
+class PostgreSQLDatabaseManager extends DatabaseManager
 {
     /**
      * @param array<string> $fixtures

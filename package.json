@@ -12,11 +12,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MacPaw/BehatDoctrineFixtures.git"
+    "url": "git+https://github.com/MacPaw/behat-doctrine-fixtures.git"
   },
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MacPaw/BehatDoctrineFixtures/issues"
+    "url": "https://github.com/MacPaw/behat-doctrine-fixtures/issues"
   },
-  "homepage": "https://github.com/MacPaw/BehatDoctrineFixtures#readme"
+  "homepage": "https://github.com/MacPaw/behat-doctrine-fixtures#readme"
 }
