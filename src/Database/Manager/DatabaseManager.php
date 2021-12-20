@@ -11,17 +11,16 @@ use Psr\Log\LoggerInterface;
 abstract class DatabaseManager
 {
     protected Connection $connection;
-
     protected EntityManagerInterface $entityManager;
-
     protected bool $schemaCreated = false;
-
     protected string $cacheDir;
+    protected LoggerInterface $logger;
 
-    private LoggerInterface $logger;
-
-    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, string $cacheDir)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger,
+        string $cacheDir
+    ) {
         $this->connection = $entityManager->getConnection();
         $this->entityManager = $entityManager;
         $this->logger = $logger;
