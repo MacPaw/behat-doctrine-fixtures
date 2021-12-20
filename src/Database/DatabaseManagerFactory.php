@@ -10,8 +10,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use BehatDoctrineFixtures\Database\Exception\DatabaseManagerNotFoundForCurrentPlatform;
 use BehatDoctrineFixtures\Database\Manager\DatabaseManager;
-use BehatDoctrineFixtures\Database\Manager\PgSqlDatabaseManager;
-use BehatDoctrineFixtures\Database\Manager\SQLiteDatabaseManager;
+use BehatDoctrineFixtures\Database\Manager\PostgreSQLDatabaseManager;
+use BehatDoctrineFixtures\Database\Manager\SqliteDatabaseManager;
 
 class DatabaseManagerFactory
 {
@@ -23,11 +23,11 @@ class DatabaseManagerFactory
         $databasePlatform = $entityManager->getConnection()->getDatabasePlatform();
 
         if ($databasePlatform instanceof SqlitePlatform) {
-            return new SQLiteDatabaseManager($entityManager, $logger, $cacheDir);
+            return new SqliteDatabaseManager($entityManager, $logger, $cacheDir);
         }
 
         if ($databasePlatform instanceof PostgreSQL100Platform) {
-            return new PgSqlDatabaseManager($entityManager, $logger, $cacheDir);
+            return new PostgreSQLDatabaseManager($entityManager, $logger, $cacheDir);
         }
 
         throw new DatabaseManagerNotFoundForCurrentPlatform($databasePlatform);
