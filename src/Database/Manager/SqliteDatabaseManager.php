@@ -7,7 +7,7 @@ namespace BehatDoctrineFixtures\Database\Manager;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\ORM\Tools\SchemaTool;
 
-class SqliteDatabaseManager extends DatabaseManager
+class SQLiteDatabaseManager extends DatabaseManager
 {
     /**
      * @param array<string> $fixtures
