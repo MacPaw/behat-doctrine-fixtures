@@ -19,7 +19,6 @@ use Psr\Log\LoggerInterface;
 final class DatabaseManagerFactoryTest extends TestCase
 {
     /**
-     * @param array $
      * @param array $expectedMonologHandlerDecoratorConfiguration
      *
      * @dataProvider getDatabaseManagerOptionsProvider
