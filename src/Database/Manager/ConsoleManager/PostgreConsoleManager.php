@@ -17,7 +17,7 @@ class PostgreConsoleManager
         string $dumpFilename,
         string $user,
         string $host,
-        string $port,
+        int $port,
         string $databaseName,
         ?string $password = null,
         ?string $additionalParams = null
@@ -27,15 +27,16 @@ class PostgreConsoleManager
             ? ''
             : "PGPASSWORD='{$password}'";
 
-        exec("{$password} pg_dump -U{$user} -h{$host} -p{$port} {$additionalParams} {$databaseName} > 
-            {$dumpFilename} {$appendStderrFile}");
+        // phpcs:disable
+        exec("{$password} pg_dump -U{$user} -h{$host} -p{$port} {$additionalParams} {$databaseName} > {$dumpFilename} {$appendStderrFile}");
+        // phpcs:enable
     }
 
     public function loadDump(
         string $dumpFilename,
         string $user,
         string $host,
-        string $port,
+        int $port,
         string $databaseName,
         ?string $password = null
     ): void {
