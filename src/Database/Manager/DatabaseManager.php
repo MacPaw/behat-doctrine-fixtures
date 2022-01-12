@@ -10,12 +10,9 @@ use Psr\Log\LoggerInterface;
 abstract class DatabaseManager
 {
     protected Connection $connection;
-
     protected bool $schemaCreated = false;
-
     protected string $cacheDir;
-
-    private LoggerInterface $logger;
+    protected LoggerInterface $logger;
 
     public function __construct(Connection $connection, LoggerInterface $logger, string $cacheDir)
     {
