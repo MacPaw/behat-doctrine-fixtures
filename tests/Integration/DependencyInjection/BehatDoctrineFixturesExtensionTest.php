@@ -22,39 +22,37 @@ class BehatDoctrineFixturesExtensionTest extends TestCase
 
         $this->expectException(ServiceNotFoundException::class);
         $this->expectExceptionMessage(
-            'You have requested a non-existent service "behat_doctrine_fixtures.database_context".'
+            'You have requested a non-existent service "BehatDoctrineFixtures\Context\DatabaseContext".'
         );
 
-        $container->getDefinition('behat_doctrine_fixtures.database_context');
+        $container->getDefinition(DatabaseContext::class);
     }
 
     public function testWithFullConfig(): void
     {
         $container = $this->createContainerFromFixture('database_context_bundle_config');
 
-        $databaseHelperDefinition = $container->getDefinition('behat_doctrine_fixtures.database_helper');
+        $databaseHelperDefinition = $container->getDefinition(DatabaseHelper::class);
         self::assertSame(DatabaseHelper::class, $databaseHelperDefinition->getClass());
         self::assertSame(
             'fidry_alice_data_fixtures.doctrine.persister_loader',
             (string) $databaseHelperDefinition->getArgument('$fixturesLoader')
         );
         self::assertSame(
-            'behat_doctrine_fixtures.database_manager_factory',
+            DatabaseManagerFactory::class,
             (string) $databaseHelperDefinition->getArgument('$databaseManagerFactory')
         );
 
-        $databaseManagerFactoryDefinition = $container->getDefinition(
-            'behat_doctrine_fixtures.database_manager_factory'
-        );
+        $databaseManagerFactoryDefinition = $container->getDefinition(DatabaseManagerFactory::class);
         self::assertSame(DatabaseManagerFactory::class, $databaseManagerFactoryDefinition->getClass());
         self::assertSame('%kernel.cache_dir%',
             (string) $databaseManagerFactoryDefinition->getArgument('$cacheDir')
         );
 
-        $databaseContextDefinition = $container->getDefinition('behat_doctrine_fixtures.database_context');
+        $databaseContextDefinition = $container->getDefinition(DatabaseContext::class);
         self::assertSame(DatabaseContext::class, $databaseContextDefinition->getClass());
         self::assertSame(
-            'behat_doctrine_fixtures.database_helper',
+            DatabaseHelper::class,
             (string) $databaseContextDefinition->getArgument('$databaseHelper')
         );
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BehatDoctrineFixtures\DependencyInjection;
 
+use BehatDoctrineFixtures\Context\DatabaseContext;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -40,7 +41,7 @@ class BehatDoctrineFixturesExtension extends Extension
         if ($databaseContextConfig['enabled']) {
             $loader->load('database_context.xml');
 
-            $databaseContextDefinition = $container->findDefinition('behat_doctrine_fixtures.database_context');
+            $databaseContextDefinition = $container->findDefinition(DatabaseContext::class);
             $databaseContextDefinition->setArgument('$dataFixturesPath', $databaseContextConfig['dataFixturesPath']);
         }
     }
