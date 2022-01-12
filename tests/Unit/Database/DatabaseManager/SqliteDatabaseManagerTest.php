@@ -7,10 +7,8 @@ namespace BehatDoctrineFixtures\Tests\Unit\Database\DatabaseManager;
 use BehatDoctrineFixtures\Database\Manager\ConsoleManager\SqliteConsoleManager;
 use BehatDoctrineFixtures\Database\Manager\SqliteDatabaseManager;
 use BehatDoctrineFixtures\Tests\Unit\Database\AbstractDatabaseManagerTest;
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\PostgreSQL100Platform;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 final class SqliteDatabaseManagerTest extends AbstractDatabaseManagerTest
@@ -18,7 +16,7 @@ final class SqliteDatabaseManagerTest extends AbstractDatabaseManagerTest
     public function testSaveBackupSuccess()
     {
         $cacheDir = 'some/path';
-        $databasePath = 'test_database';
+        $databasePath = 'some/path/test_database';
         $dumpFilename = sprintf('%s_40cd750bba9870f18aada2478b24840a.sql', $databasePath);
 
         $entityManager = self::createMock(EntityManagerInterface::class);
@@ -26,7 +24,7 @@ final class SqliteDatabaseManagerTest extends AbstractDatabaseManagerTest
         $logger = self::createMock(LoggerInterface::class);
         $logger->expects($this->once())
             ->method('info')
-            ->with('Database backup saved', ['fixtures' => []]);
+            ->with(sprintf('Database backup saved to file %s', $dumpFilename), ['fixtures' => []]);
 
         $connection = $this->createConnectionMockWithPlatformAndParams(
             PostgreSQL100Platform::class,
@@ -47,7 +45,7 @@ final class SqliteDatabaseManagerTest extends AbstractDatabaseManagerTest
     public function testLoadBackupSuccess(): void
     {
         $cacheDir = 'some/path';
-        $databasePath = 'test_database';
+        $databasePath = 'some/path/test_database';
         $dumpFilename = sprintf('%s_40cd750bba9870f18aada2478b24840a.sql', $databasePath);
 
         $entityManager = self::createMock(EntityManagerInterface::class);

@@ -44,7 +44,7 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
         $logger = self::createMock(LoggerInterface::class);
         $logger->expects($this->once())
             ->method('info')
-            ->with('Database backup saved', ['fixtures' => []]);
+            ->with(sprintf('Database backup saved to file %s/%s', $cacheDir, $dumpFilename), ['fixtures' => []]);
 
         $connection = $this->createConnectionMockWithPlatformAndParams(
             PostgreSQL100Platform::class,

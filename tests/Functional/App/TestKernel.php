@@ -15,7 +15,7 @@ class TestKernel extends Kernel
 
     public function __construct()
     {
-        parent::__construct('test', true);
+        parent::__construct('test', false);
     }
 
     public function registerBundles(): iterable
