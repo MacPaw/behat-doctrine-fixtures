@@ -13,10 +13,22 @@ parameters:
 	        count: 2
 	        path: ./src/Database/Manager
 	    -
-	        message: '#.* of encapsed string cannot be cast to string.#'
-	        count: 8
+	        message: '#.* of method BehatDoctrineFixtures\\Database\\Manager\\ConsoleManager\\PostgreConsoleManager::createDump\(\) expects string, mixed given.#'
+	        count: 3
 	        path: ./src/Database/Manager/PostgreSQLDatabaseManager.php
 	    -
-	        message: '#.* of function sprintf expects bool|float|int|string|null, mixed given.#'
+	        message: '#.* of method BehatDoctrineFixtures\\Database\\Manager\\ConsoleManager\\PostgreConsoleManager::createDump\(\) expects string\|null, mixed given.#'
 	        count: 1
-	        path: ./src/Database/Manager
+	        path: ./src/Database/Manager/PostgreSQLDatabaseManager.php
+	    -
+	        message: '#.* of method BehatDoctrineFixtures\\Database\\Manager\\ConsoleManager\\PostgreConsoleManager::loadDump\(\) expects string, mixed given.#'
+	        count: 3
+	        path: ./src/Database/Manager/PostgreSQLDatabaseManager.php
+	    -
+	        message: '#.* of method BehatDoctrineFixtures\\Database\\Manager\\ConsoleManager\\PostgreConsoleManager::loadDump\(\) expects string\|null, mixed given.#'
+	        count: 1
+	        path: ./src/Database/Manager/PostgreSQLDatabaseManager.php
+	    -
+	        message: '#.* of function sprintf expects bool\|float\|int\|string\|null, mixed given.#'
+	        count: 1
+	        path: ./src/Database/Manager/PostgreSQLDatabaseManager.php

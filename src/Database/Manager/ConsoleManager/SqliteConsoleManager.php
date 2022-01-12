@@ -6,19 +6,13 @@ namespace BehatDoctrineFixtures\Database\Manager\ConsoleManager;
 
 class SqliteConsoleManager
 {
-    /**
-     * @param mixed $params
-     */
-    public function changeMode(...$params): void
+    public function changeMode(string $filename, int $permissions): void
     {
-        chmod(...$params);
+        chmod($filename, $permissions);
     }
 
-    /**
-     * @param mixed $params
-     */
-    public function copy(...$params): void
+    public function copy(string $from, string $to): void
     {
-        copy(...$params);
+        copy($from, $to);
     }
 }
