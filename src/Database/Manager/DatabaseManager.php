@@ -5,24 +5,18 @@ declare(strict_types=1);
 namespace BehatDoctrineFixtures\Database\Manager;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
 abstract class DatabaseManager
 {
     protected Connection $connection;
-    protected EntityManagerInterface $entityManager;
     protected bool $schemaCreated = false;
     protected string $cacheDir;
     protected LoggerInterface $logger;
 
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        LoggerInterface $logger,
-        string $cacheDir
-    ) {
-        $this->connection = $entityManager->getConnection();
-        $this->entityManager = $entityManager;
+    public function __construct(Connection $connection, LoggerInterface $logger, string $cacheDir)
+    {
+        $this->connection = $connection;
         $this->logger = $logger;
         $this->cacheDir = $cacheDir;
     }

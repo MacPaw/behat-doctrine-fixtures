@@ -6,6 +6,7 @@ namespace BehatDoctrineFixtures\Tests\Integration\DependencyInjection;
 
 use BehatDoctrineFixtures\Context\DatabaseContext;
 use BehatDoctrineFixtures\Database\DatabaseHelper;
+use BehatDoctrineFixtures\Database\DatabaseManagerFactory;
 use BehatDoctrineFixtures\DependencyInjection\BehatDoctrineFixturesExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\FileLocator;
@@ -31,15 +32,23 @@ class BehatDoctrineFixturesExtensionTest extends TestCase
     {
         $container = $this->createContainerFromFixture('database_context_bundle_config');
 
-        $databaseHelperContext = $container->getDefinition('behat_doctrine_fixtures.database_helper');
-        self::assertSame(DatabaseHelper::class, $databaseHelperContext->getClass());
-        self::assertSame(
-            '%kernel.cache_dir%',
-            (string) $databaseHelperContext->getArgument('$cacheDir')
-        );
+        $databaseHelperDefinition = $container->getDefinition('behat_doctrine_fixtures.database_helper');
+        self::assertSame(DatabaseHelper::class, $databaseHelperDefinition->getClass());
         self::assertSame(
             'fidry_alice_data_fixtures.doctrine.persister_loader',
-            (string) $databaseHelperContext->getArgument('$fixturesLoader')
+            (string) $databaseHelperDefinition->getArgument('$fixturesLoader')
+        );
+        self::assertSame(
+            'behat_doctrine_fixtures.database_manager_factory',
+            (string) $databaseHelperDefinition->getArgument('$databaseManagerFactory')
+        );
+
+        $databaseManagerFactoryDefinition = $container->getDefinition(
+            'behat_doctrine_fixtures.database_manager_factory'
+        );
+        self::assertSame(DatabaseManagerFactory::class, $databaseManagerFactoryDefinition->getClass());
+        self::assertSame('%kernel.cache_dir%',
+            (string) $databaseManagerFactoryDefinition->getArgument('$cacheDir')
         );
 
         $databaseContextDefinition = $container->getDefinition('behat_doctrine_fixtures.database_context');

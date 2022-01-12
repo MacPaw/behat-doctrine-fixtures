@@ -1,0 +1,4 @@
+BehatDoctrineFixtures\Tests\Functional\App\Entity\BaseEntity:
+  baseEntity:
+    __construct:
+      - 1

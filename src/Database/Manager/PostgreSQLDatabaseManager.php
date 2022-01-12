@@ -4,11 +4,28 @@ declare(strict_types=1);
 
 namespace BehatDoctrineFixtures\Database\Manager;
 
+use BehatDoctrineFixtures\Database\Manager\ConsoleManager\PostgreConsoleManager;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\DBAL\Connection;
+use Psr\Log\LoggerInterface;
 
 class PostgreSQLDatabaseManager extends DatabaseManager
 {
+    private ORMExecutor $executor;
+    private PostgreConsoleManager $consoleManager;
+
+    public function __construct(
+        PostgreConsoleManager $consoleManager,
+        ORMExecutor $executor,
+        Connection $connection,
+        LoggerInterface $logger,
+        string $cacheDir
+    ) {
+        parent::__construct($connection, $logger, $cacheDir);
+        $this->consoleManager = $consoleManager;
+        $this->executor = $executor;
+    }
+
     /**
      * @param array<string> $fixtures
      */
@@ -21,18 +38,24 @@ class PostgreSQLDatabaseManager extends DatabaseManager
         }
 
         $databaseName = $this->getDatabaseName();
-        $password = "PGPASSWORD='{$this->connection->getParams()['password']}'";
+        $password = $this->connection->getParams()['password'];
         $user = $this->connection->getParams()['user'];
         $host = $this->connection->getParams()['host'];
         $port = $this->connection->getParams()['port'];
         # Needed for optimization
         $additionalParams = "--exclude-table=migration_versions --no-comments --disable-triggers --data-only";
-        $appendStderrFile = "2> {$this->cacheDir}/pg_dump_log.txt";
 
-        exec("{$password} pg_dump -U{$user} -h{$host} -p{$port} {$additionalParams} {$databaseName} > 
-            {$backupFilename} {$appendStderrFile}");
+        $this->consoleManager->createDump(
+            $backupFilename,
+            $user,
+            $host,
+            $port,
+            $databaseName,
+            $password,
+            $additionalParams
+        );
 
-        $this->log('Database backup saved', ['fixtures' => $fixtures]);
+        $this->log(sprintf('Database backup saved to file %s', $backupFilename), ['fixtures' => $fixtures]);
     }
 
     /**
@@ -48,12 +71,12 @@ class PostgreSQLDatabaseManager extends DatabaseManager
 
         $backupFilename = $this->getBackupFilename($fixtures);
         $databaseName = $this->getDatabaseName();
-        $password = "PGPASSWORD='{$this->connection->getParams()['password']}'";
+        $password = $this->connection->getParams()['password'];
         $user = $this->connection->getParams()['user'];
         $host = $this->connection->getParams()['host'];
         $port = $this->connection->getParams()['port'];
 
-        exec("{$password} psql -U{$user} -h{$host} -p{$port} {$databaseName} < {$backupFilename}");
+        $this->consoleManager->loadDump($backupFilename, $user, $host, $port, $databaseName, $password);
 
         $this->log('Database backup loaded');
     }
@@ -71,7 +94,7 @@ class PostgreSQLDatabaseManager extends DatabaseManager
     {
         $this->createDatabase();
 
-        exec('bin/console d:mi:mi --no-interaction');
+        $this->consoleManager->runMigrations();
 
         $this->schemaCreated = true;
         $this->log('Schema created');
@@ -79,10 +102,7 @@ class PostgreSQLDatabaseManager extends DatabaseManager
 
     private function dropData(): void
     {
-        $purger = new ORMPurger($this->entityManager);
-        $executor =  new ORMExecutor($this->entityManager, $purger);
-
-        $executor->purge();
+        $this->executor->purge();
         $this->restartSequences();
     }
 
@@ -110,7 +130,7 @@ class PostgreSQLDatabaseManager extends DatabaseManager
 
     private function createDatabase(): void
     {
-        exec('bin/console d:d:create');
+        $this->consoleManager->createDatabase();
 
         $this->log('Database created');
     }
