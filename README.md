@@ -60,6 +60,18 @@ behat_doctrine_fixtures:
         dataFixturesPath: <path to directory with your fixtures>
 ```
 
+Step 3: Configure Behat
+=============
+Go to `behat.yml`
+
+```yaml
+...
+  contexts:
+    - BehatDoctrineFixtures\Context\RedisContext
+    - BehatDoctrineFixtures\Context\RedisFixturesContext
+...
+
+
 [master Build Status]: https://github.com/macpaw/behat-doctrine-fixtures/actions?query=workflow%3ACI+branch%3Amaster
 [master Build Status Image]: https://github.com/macpaw/behat-doctrine-fixtures/workflows/CI/badge.svg?branch=master
 [develop Build Status]: https://github.com/macpaw/behat-doctrine-fixtures/actions?query=workflow%3ACI+branch%3Adevelop
