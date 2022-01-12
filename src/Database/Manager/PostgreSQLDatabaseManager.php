@@ -55,7 +55,7 @@ class PostgreSQLDatabaseManager extends DatabaseManager
             $additionalParams
         );
 
-        $this->log('Database backup saved', ['fixtures' => $fixtures]);
+        $this->log(sprintf('Database backup saved to file %s', $backupFilename), ['fixtures' => $fixtures]);
     }
 
     /**

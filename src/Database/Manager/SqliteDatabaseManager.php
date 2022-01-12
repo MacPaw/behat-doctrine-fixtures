@@ -38,7 +38,7 @@ class SqliteDatabaseManager extends DatabaseManager
 
         $this->consoleManager->copy($databasePath, $backupFilename);
 
-        $this->log('Database backup saved', ['fixtures' => $fixtures]);
+        $this->log(sprintf('Database backup saved to file %s', $backupFilename), ['fixtures' => $fixtures]);
     }
 
     /**

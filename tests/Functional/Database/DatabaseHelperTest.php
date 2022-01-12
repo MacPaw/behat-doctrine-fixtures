@@ -46,7 +46,6 @@ class DatabaseHelperTest extends TestCase
 
         self::assertInstanceOf(BaseEntity::class, $baseEntity);
         self::assertFileExists(__DIR__ . '/../App/var/cache/data.db_40cd750bba9870f18aada2478b24840a.sql');
-        self::assertFileExists(__DIR__ . '/../App/var/cache/data.db_b6638dc01736134acef8b914fe820676.sql');
     }
 
     private function getContainer(): ContainerInterface {
