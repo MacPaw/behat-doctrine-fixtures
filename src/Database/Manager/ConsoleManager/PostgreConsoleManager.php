@@ -47,11 +47,11 @@ class PostgreConsoleManager
 
     public function runMigrations(): void
     {
-        exec('bin/console d:mi:mi --no-interaction');
+        exec('bin/console --env=test d:mi:mi --no-interaction');
     }
 
     public function createDatabase(): void
     {
-        exec('bin/console d:d:create');
+        exec('bin/console --env=test d:d:create');
     }
 }
