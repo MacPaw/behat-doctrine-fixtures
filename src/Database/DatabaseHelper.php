@@ -8,27 +8,23 @@ use Doctrine\ORM\EntityManagerInterface;
 use Fidry\AliceDataFixtures\Bridge\Doctrine\Persister\ObjectManagerPersister;
 use Fidry\AliceDataFixtures\Loader\PersisterLoader;
 use InvalidArgumentException;
-use Psr\Log\LoggerInterface;
 use BehatDoctrineFixtures\Database\Manager\DatabaseManager;
 
 class DatabaseHelper
 {
     private EntityManagerInterface $entityManager;
     private PersisterLoader $fixturesLoader;
-    private LoggerInterface $logger;
-    private string $cacheDir;
+    private DatabaseManagerFactory $databaseManagerFactory;
     private ?DatabaseManager $databaseManager = null;
 
     public function __construct(
+        DatabaseManagerFactory $databaseManagerFactory,
         EntityManagerInterface $entityManager,
-        PersisterLoader $fixturesLoader,
-        LoggerInterface $logger,
-        string $cacheDir
+        PersisterLoader $fixturesLoader
     ) {
+        $this->databaseManagerFactory = $databaseManagerFactory;
         $this->entityManager = $entityManager;
         $this->fixturesLoader = $fixturesLoader->withPersister(new ObjectManagerPersister($entityManager));
-        $this->logger = $logger;
-        $this->cacheDir = $cacheDir;
     }
 
     /**
@@ -62,6 +58,6 @@ class DatabaseHelper
     {
         return $this->databaseManager !== null
             ? $this->databaseManager
-            : DatabaseManagerFactory::createDatabaseManager($this->entityManager, $this->logger, $this->cacheDir);
+            : $this->databaseManagerFactory->createDatabaseManager($this->entityManager);
     }
 }

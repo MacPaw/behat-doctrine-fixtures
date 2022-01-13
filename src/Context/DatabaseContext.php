@@ -15,7 +15,7 @@ class DatabaseContext implements Context
 
     public function __construct(
         DatabaseHelper $databaseHelper,
-        string $dataFixturesPath,
+        string $dataFixturesPath
     ) {
         $this->databaseHelper = $databaseHelper;
         $this->dataFixturesPath = $dataFixturesPath;

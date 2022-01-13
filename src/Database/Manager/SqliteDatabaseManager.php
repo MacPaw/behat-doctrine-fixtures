@@ -4,11 +4,30 @@ declare(strict_types=1);
 
 namespace BehatDoctrineFixtures\Database\Manager;
 
+use BehatDoctrineFixtures\Database\Manager\ConsoleManager\SqliteConsoleManager;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
+use Psr\Log\LoggerInterface;
 
-class SQLiteDatabaseManager extends DatabaseManager
+class SqliteDatabaseManager extends DatabaseManager
 {
+    private SqliteConsoleManager $consoleManager;
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(
+        SqliteConsoleManager $consoleManager,
+        EntityManagerInterface $entityManager,
+        Connection $connection,
+        LoggerInterface $logger,
+        string $cacheDir
+    ) {
+        parent::__construct($connection, $logger, $cacheDir);
+        $this->consoleManager = $consoleManager;
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @param array<string> $fixtures
      */
@@ -17,9 +36,9 @@ class SQLiteDatabaseManager extends DatabaseManager
         $databasePath = $this->getDatabaseName();
         $backupFilename = $this->getBackupFilename($fixtures);
 
-        copy($databasePath, $backupFilename);
+        $this->consoleManager->copy($databasePath, $backupFilename);
 
-        $this->log('Database backup saved', ['fixtures' => $fixtures]);
+        $this->log(sprintf('Database backup saved to file %s', $backupFilename), ['fixtures' => $fixtures]);
     }
 
     /**
@@ -33,8 +52,8 @@ class SQLiteDatabaseManager extends DatabaseManager
         $this->entityManager->clear();
         $this->connection->close();
 
-        copy($backupFileName, $databasePath);
-        chmod($databasePath, 0666);
+        $this->consoleManager->copy($backupFileName, $databasePath);
+        $this->consoleManager->changeMode($databasePath, 0666);
 
         $this->log('Database backup loaded');
     }

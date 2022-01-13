@@ -4,8 +4,8 @@
     xsd:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service autowire="true" id="behat_doctrine_fixtures.database_context" class="BehatDoctrineFixtures\Context\DatabaseContext">
-            <argument key="$databaseHelper" type="service" id="behat_doctrine_fixtures.database_helper"/>
+        <service public="true" autowire="true" id="BehatDoctrineFixtures\Context\DatabaseContext" class="BehatDoctrineFixtures\Context\DatabaseContext">
+            <argument key="$databaseHelper" type="service" id="BehatDoctrineFixtures\Database\DatabaseHelper"/>
         </service>
     </services>
 </container>

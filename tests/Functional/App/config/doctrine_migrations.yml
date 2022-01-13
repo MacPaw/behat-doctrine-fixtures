@@ -1,0 +1,8 @@
+doctrine_migrations:
+    storage:
+        table_storage:
+            table_name: 'migration_versions'
+    migrations_paths:
+        DoctrineMigrations: '%kernel.project_dir%/Migrations'
+    organize_migrations: BY_YEAR
+    custom_template: '%kernel.project_dir%/config/doctrine_migrations.template'

@@ -1,6 +1,12 @@
 Behat Doctrine Fixtures
 =================================
 
+| Version | Build Status | Code Coverage |
+|:---------:|:-------------:|:-----:|
+| `master`| [![CI][master Build Status Image]][master Build Status] | [![Coverage Status][master Code Coverage Image]][master Code Coverage] |
+| `develop`| [![CI][develop Build Status Image]][develop Build Status] | [![Coverage Status][develop Code Coverage Image]][develop Code Coverage] |
+
+
 Installation
 ============
 
@@ -53,3 +59,22 @@ behat_doctrine_fixtures:
     database_context:
         dataFixturesPath: <path to directory with your fixtures>
 ```
+
+Step 4: Configure Behat
+=============
+Go to `behat.yml`
+
+```yaml
+...
+  contexts:
+    - BehatDoctrineFixtures\Context\DatabaseContext
+...
+
+[master Build Status]: https://github.com/macpaw/behat-doctrine-fixtures/actions?query=workflow%3ACI+branch%3Amaster
+[master Build Status Image]: https://github.com/macpaw/behat-doctrine-fixtures/workflows/CI/badge.svg?branch=master
+[develop Build Status]: https://github.com/macpaw/behat-doctrine-fixtures/actions?query=workflow%3ACI+branch%3Adevelop
+[develop Build Status Image]: https://github.com/macpaw/behat-doctrine-fixtures/workflows/CI/badge.svg?branch=develop
+[master Code Coverage]: https://codecov.io/gh/macpaw/behat-doctrine-fixtures/branch/master
+[master Code Coverage Image]: https://img.shields.io/codecov/c/github/macpaw/behat-doctrine-fixtures/master?logo=codecov
+[develop Code Coverage]: https://codecov.io/gh/macpaw/behat-doctrine-fixtures/branch/develop
+[develop Code Coverage Image]: https://img.shields.io/codecov/c/github/macpaw/behat-doctrine-fixtures/develop?logo=codecov
