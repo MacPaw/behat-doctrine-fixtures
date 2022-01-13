@@ -25,7 +25,7 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
         $password = 'password';
         $user = 'user';
         $host = 'host';
-        $port = 'port';
+        $port = 5432;
         $additionalParams = "--exclude-table=migration_versions --no-comments --disable-triggers --data-only";
 
         $consoleManager = self::createMock(PostgreConsoleManager::class);
@@ -94,7 +94,7 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
         $password = 'password';
         $user = 'user';
         $host = 'host';
-        $port = 'port';
+        $port = 5432;
 
         $consoleManager = self::createMock(PostgreConsoleManager::class);
         $consoleManager->expects($this->once())
