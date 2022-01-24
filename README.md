@@ -22,6 +22,12 @@ This command requires you to have Composer installed globally, as explained
 in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
 of the Composer documentation.
 
+If you use PostgreSQL database, you also need to install postgresql-client:
+
+```console
+$ apt-get install -y postgresql-client
+```
+
 Step 2: Enable the Bundle
 ----------------------------------
 Then, enable the bundle by adding it to the list of registered bundles
@@ -59,6 +65,8 @@ behat_doctrine_fixtures:
     database_context:
         dataFixturesPath: <path to directory with your fixtures>
 ```
+
+You don't need to explicitly pass database url here, since this bundle uses doctrine connection under the hood. For now, we support PostgreSQL and Sqlite databases.
 
 Step 4: Configure Behat
 =============
