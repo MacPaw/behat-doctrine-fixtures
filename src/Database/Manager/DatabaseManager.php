@@ -12,13 +12,19 @@ abstract class DatabaseManager
     protected Connection $connection;
     protected bool $schemaCreated = false;
     protected string $cacheDir;
+    protected string $connectionName;
     protected LoggerInterface $logger;
 
-    public function __construct(Connection $connection, LoggerInterface $logger, string $cacheDir)
-    {
+    public function __construct(
+        Connection $connection,
+        LoggerInterface $logger,
+        string $cacheDir,
+        string $connectionName
+    ) {
         $this->connection = $connection;
         $this->logger = $logger;
         $this->cacheDir = $cacheDir;
+        $this->connectionName = $connectionName;
     }
 
     abstract public function prepareSchema(): void;

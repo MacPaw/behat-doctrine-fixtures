@@ -30,8 +30,15 @@ class DatabaseManagerFactory
         $this->cacheDir = $cacheDir;
     }
 
-    public function createDatabaseManager(EntityManagerInterface $entityManager): DatabaseManager
-    {
+    /**
+     * @param array<string> $excludedTables
+     */
+    public function createDatabaseManager(
+        EntityManagerInterface $entityManager,
+        array $excludedTables,
+        string $runDatabaseMigrationCommand,
+        string $connectionName
+    ): DatabaseManager {
         $databasePlatform = $entityManager->getConnection()->getDatabasePlatform();
         $connection = $entityManager->getConnection();
 
@@ -42,12 +49,13 @@ class DatabaseManagerFactory
                 $entityManager,
                 $connection,
                 $this->logger,
-                $this->cacheDir
+                $this->cacheDir,
+                $connectionName
             );
         }
 
         if ($databasePlatform instanceof PostgreSQL100Platform) {
-            $consoleManager = new PostgreConsoleManager($this->cacheDir);
+            $consoleManager = new PostgreConsoleManager($this->cacheDir, $runDatabaseMigrationCommand);
             $purger = new ORMPurger($entityManager);
             $executor = new ORMExecutor($entityManager, $purger);
 
@@ -56,7 +64,9 @@ class DatabaseManagerFactory
                 $executor,
                 $connection,
                 $this->logger,
-                $this->cacheDir
+                $excludedTables,
+                $this->cacheDir,
+                $connectionName
             );
         }
 

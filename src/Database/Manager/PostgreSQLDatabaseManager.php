@@ -13,17 +13,21 @@ class PostgreSQLDatabaseManager extends DatabaseManager
 {
     private ORMExecutor $executor;
     private PostgreConsoleManager $consoleManager;
+    private array $excludedTables;
 
     public function __construct(
         PostgreConsoleManager $consoleManager,
         ORMExecutor $executor,
         Connection $connection,
         LoggerInterface $logger,
-        string $cacheDir
+        array $excludedTables,
+        string $cacheDir,
+        string $connectionName
     ) {
-        parent::__construct($connection, $logger, $cacheDir);
+        parent::__construct($connection, $logger, $cacheDir, $connectionName);
         $this->consoleManager = $consoleManager;
         $this->executor = $executor;
+        $this->excludedTables = $excludedTables;
     }
 
     /**
@@ -42,8 +46,14 @@ class PostgreSQLDatabaseManager extends DatabaseManager
         $user = $this->connection->getParams()['user'];
         $host = $this->connection->getParams()['host'];
         $port = $this->connection->getParams()['port'];
+
+        $excludeTablesParams = '';
+        foreach ($this->excludedTables as $tableName) {
+            $excludeTablesParams = sprintf("%s -T %s", $excludeTablesParams, $tableName);
+        }
+
         # Needed for optimization
-        $additionalParams = "--exclude-table=migration_versions --no-comments --disable-triggers --data-only";
+        $additionalParams = '--no-comments --disable-triggers --data-only' . $excludeTablesParams;
 
         $this->consoleManager->createDump(
             $backupFilename,
@@ -93,8 +103,7 @@ class PostgreSQLDatabaseManager extends DatabaseManager
     public function createSchema(): void
     {
         $this->createDatabase();
-
-        $this->consoleManager->runMigrations();
+        $this->runMigrations();
 
         $this->schemaCreated = true;
         $this->log('Schema created');
@@ -130,9 +139,16 @@ class PostgreSQLDatabaseManager extends DatabaseManager
 
     private function createDatabase(): void
     {
-        $this->consoleManager->createDatabase();
+        $this->consoleManager->createDatabase($this->connectionName);
 
-        $this->log('Database created');
+        $this->log(sprintf('Database created for %s connection', $this->connectionName));
+    }
+
+    private function runMigrations(): void
+    {
+        $this->consoleManager->runMigrations();
+
+        $this->log(sprintf('Migrations ran for %s connections', $this->connectionName));
     }
 
     protected function getDatabaseName(): string

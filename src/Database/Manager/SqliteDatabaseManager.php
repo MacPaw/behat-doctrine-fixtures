@@ -21,9 +21,10 @@ class SqliteDatabaseManager extends DatabaseManager
         EntityManagerInterface $entityManager,
         Connection $connection,
         LoggerInterface $logger,
-        string $cacheDir
+        string $cacheDir,
+        string $connectionName
     ) {
-        parent::__construct($connection, $logger, $cacheDir);
+        parent::__construct($connection, $logger, $cacheDir, $connectionName);
         $this->consoleManager = $consoleManager;
         $this->entityManager = $entityManager;
     }

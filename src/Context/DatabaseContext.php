@@ -4,47 +4,40 @@ declare(strict_types=1);
 
 namespace BehatDoctrineFixtures\Context;
 
-use BehatDoctrineFixtures\Database\DatabaseHelper;
+use BehatDoctrineFixtures\Database\DatabaseHelperCollection;
 use Behat\Behat\Context\Context;
 use InvalidArgumentException;
 
 class DatabaseContext implements Context
 {
-    protected DatabaseHelper $databaseHelper;
-    protected string $dataFixturesPath;
+    protected DatabaseHelperCollection $databaseHelperCollection;
 
     public function __construct(
-        DatabaseHelper $databaseHelper,
-        string $dataFixturesPath
+        DatabaseHelperCollection $databaseHelperCollection
     ) {
-        $this->databaseHelper = $databaseHelper;
-        $this->dataFixturesPath = $dataFixturesPath;
+        $this->databaseHelperCollection = $databaseHelperCollection;
     }
 
     /**
-     * I load fixtures.
-     *
-     * @param string $aliases
-     *
-     * @throws InvalidArgumentException
-     *
-     * @Given /^I load fixtures "([^\"]*)"$/
+     * @Given I load fixtures :fixtures
      */
-    public function loadFixtures(string $aliases): void
+    public function loadFixturesForDefaultConnection(string $fixtures): void
     {
-        $aliases = array_map('trim', explode(',', $aliases));
-        $fixtures = [];
+        $this->loadFixtures('default', $fixtures);
+    }
 
-        foreach ($aliases as $alias) {
-            $fixture = sprintf('%s/%s.yml', $this->dataFixturesPath, $alias);
+    /**
+     * @Given I load fixtures :fixtures for :connectionName connection
+     */
+    public function loadFixturesForGivenConnection(string $fixtures, string $connectionName): void
+    {
+        $this->loadFixtures($connectionName, $fixtures);
+    }
 
-            if (!is_file($fixture)) {
-                throw new InvalidArgumentException(sprintf('The "%s" fixture not found.', $alias));
-            }
-
-            $fixtures[] = $fixture;
-        }
-
-        $this->databaseHelper->loadFixtures($fixtures);
+    public function loadFixtures(string $connectionName, string $fixtures): void
+    {
+        $fixtureAliases = array_map('trim', explode(',', $fixtures));
+        $this->databaseHelperCollection->getDatabaseHelperByConnectionName($connectionName)
+            ->loadFixtures($fixtureAliases);
     }
 }

@@ -16,19 +16,32 @@ class Configuration implements ConfigurationInterface
         $root = $treeBuilder->getRootNode()->children();
 
         $this->addDatabaseContextSection($root);
+        $this->addConnectionsSection($root);
 
         return $treeBuilder;
     }
 
     private function addDatabaseContextSection(NodeBuilder $builder): void
     {
-        $builder
-            ->arrayNode('database_context')
+        $builder->booleanNode('database_context')->defaultTrue()->end();
+    }
+
+    private function addConnectionsSection(NodeBuilder $builder): void
+    {
+        $builder->arrayNode('connections')
+            ->useAttributeAsKey('connection')
+            ->prototype('array')
                 ->children()
-                    ->scalarNode('dataFixturesPath')->cannotBeEmpty()->end()
+                    ->scalarNode('runMigrationsCommand')->cannotBeEmpty()->end()
+                    ->arrayNode('databaseFixturesPaths')
+                        ->scalarPrototype()->end()
+                    ->end()
+                    ->arrayNode('excludedTables')
+                        ->defaultValue([])
+                        ->scalarPrototype()->end()
+                    ->end()
                 ->end()
-                ->canBeEnabled()
             ->end()
-        ;
+        ->end();
     }
 }
