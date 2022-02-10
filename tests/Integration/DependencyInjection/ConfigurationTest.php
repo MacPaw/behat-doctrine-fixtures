@@ -13,27 +13,26 @@ final class ConfigurationTest extends TestCase
     public function testProcessConfigurationWithDefaultConfiguration(): void
     {
         $expectedBundleDefaultConfig = [
-            'database_context' => [
-                'enabled' => false
-            ]
+            'database_context' => true,
+            'connections' => []
         ];
 
         $this->assertSame($expectedBundleDefaultConfig, $this->processConfiguration([]));
     }
 
     /**
-     * @param array|bool $monologHandlerDecoratorConfiguration
-     * @param array $expectedMonologHandlerDecoratorConfiguration
+     * @param array|bool $databaseContextConfiguration
+     * @param array $expectedDatabaseContextConfiguration
      *
      * @dataProvider getDatabaseContextOptionsProvider
      */
-    public function testDatabaseContextOptions(
+    public function testDatabaseHelperOptions(
         $databaseContextConfiguration,
         array $expectedDatabaseContextConfiguration
     ): void {
-        $config = $this->processConfiguration(['database_context' => $databaseContextConfiguration]);
+        $config = $this->processConfiguration($databaseContextConfiguration);
 
-        $this->assertSame($expectedDatabaseContextConfiguration, $config['database_context']);
+        $this->assertSame($expectedDatabaseContextConfiguration, $config);
     }
 
     public function getDatabaseContextOptionsProvider(): array
@@ -41,17 +40,55 @@ final class ConfigurationTest extends TestCase
         return [
             [
                 [
-                    'dataFixturesPath' => 'some/path'
+                    'connections' => [
+                        'default' => [
+                            'databaseFixturesPaths' => ['test/path'],
+                            'excludedTables' => ['migrations'],
+                            'runMigrationsCommand' => 'some command'
+                        ]
+                    ]
                 ],
                 [
-                    'dataFixturesPath' => 'some/path',
-                    'enabled' => true
+                    'connections' => [
+                        'default' => [
+                            'databaseFixturesPaths' => ['test/path'],
+                            'excludedTables' => ['migrations'],
+                            'runMigrationsCommand' => 'some command'
+                        ]
+                    ],
+                    'database_context' => true
                 ]
             ],
             [
-                false,
                 [
-                    'enabled' => false
+                    'database_context' => false,
+                    'connections' => [
+                        'default' => [
+                            'databaseFixturesPaths' => ['test/path'],
+                            'excludedTables' => ['migrations'],
+                            'runMigrationsCommand' => 'some command'
+                        ],
+                        'test' => [
+                            'databaseFixturesPaths' => ['test/path'],
+                            'excludedTables' => ['test_migrations'],
+                            'runMigrationsCommand' => 'test command'
+                        ]
+                    ]
+                ],
+                [
+                    'database_context' => false,
+                    'connections' => [
+                        'default' => [
+                            'databaseFixturesPaths' => ['test/path'],
+                            'excludedTables' => ['migrations'],
+                            'runMigrationsCommand' => 'some command'
+                        ],
+                        'test' => [
+                            'databaseFixturesPaths' => ['test/path'],
+                            'excludedTables' => ['test_migrations'],
+                            'runMigrationsCommand' => 'test command'
+                        ]
+                    ]
                 ]
             ]
         ];

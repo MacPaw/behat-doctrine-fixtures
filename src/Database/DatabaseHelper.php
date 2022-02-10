@@ -18,7 +18,7 @@ class DatabaseHelper
     private DatabaseManagerFactory $databaseManagerFactory;
     private array $databaseFixturePaths;
     private array $excludedTables;
-    private string $runDoctrineMigrationsCommand;
+    private string $runMigrationsCommand;
     private string $connectionName;
     private ?DatabaseManager $databaseManager = null;
 
@@ -28,7 +28,7 @@ class DatabaseHelper
         PersisterLoader $fixturesLoader,
         array $databaseFixturePaths,
         array $excludedTables,
-        string $runDoctrineMigrationsCommand,
+        string $runMigrationsCommand,
         string $connectionName
     ) {
         $this->databaseManagerFactory = $databaseManagerFactory;
@@ -36,12 +36,12 @@ class DatabaseHelper
         $this->fixturesLoader = $fixturesLoader->withPersister(new ObjectManagerPersister($entityManager));
         $this->databaseFixturePaths = $databaseFixturePaths;
         $this->excludedTables = $excludedTables;
-        $this->runDoctrineMigrationsCommand = $runDoctrineMigrationsCommand;
+        $this->runMigrationsCommand = $runMigrationsCommand;
         $this->connectionName = $connectionName;
     }
 
     /**
-     * @param array<string> $fixtures
+     * @param array<string> $fixtureAliases
      */
     public function loadFixtures(array $fixtureAliases = []): void
     {
@@ -79,13 +79,14 @@ class DatabaseHelper
             : $this->databaseManagerFactory->createDatabaseManager(
                 $this->entityManager,
                 $this->excludedTables,
-                $this->runDoctrineMigrationsCommand,
+                $this->runMigrationsCommand,
                 $this->connectionName
             );
     }
 
-    private function resolveFixtureAlias(string $fixtureAlias): string {
-        foreach ($this->databaseFixturePaths as $databaseFixturePath){
+    private function resolveFixtureAlias(string $fixtureAlias): string
+    {
+        foreach ($this->databaseFixturePaths as $databaseFixturePath) {
             $fixture = sprintf('%s/%s.yml', $databaseFixturePath, $fixtureAlias);
 
             if (is_file($fixture)) {
@@ -96,7 +97,8 @@ class DatabaseHelper
         throw new FixtureFileNotFound($fixtureAlias);
     }
 
-    public function getConnectionName():string {
+    public function getConnectionName(): string
+    {
         return $this->connectionName;
     }
 }

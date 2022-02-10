@@ -11,7 +11,8 @@ class DatabaseHelperCollection
 {
     private array $items = [];
 
-    public function __construct(iterable $databaseHelperList) {
+    public function __construct(iterable $databaseHelperList)
+    {
         foreach ($databaseHelperList as $databaseHelper) {
             $this->add($databaseHelper);
         }

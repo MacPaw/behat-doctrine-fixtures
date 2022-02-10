@@ -26,7 +26,8 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
         $user = 'user';
         $host = 'host';
         $port = 5432;
-        $additionalParams = "--exclude-table=migration_versions --no-comments --disable-triggers --data-only";
+        $excludedTables = ['migration_versions'];
+        $additionalParams = "--no-comments --disable-triggers --data-only -T migration_versions";
 
         $consoleManager = self::createMock(PostgreConsoleManager::class);
         $consoleManager->expects($this->once())
@@ -44,8 +45,12 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
         $logger = self::createMock(LoggerInterface::class);
         $logger->expects($this->once())
             ->method('info')
-            ->with(sprintf('Database backup saved to file %s/%s', $cacheDir, $dumpFilename), ['fixtures' => []]);
+            ->with(
+                sprintf('Database backup saved to file %s/%s for default connection', $cacheDir, $dumpFilename),
+                ['fixtures' => []]
+            );
 
+        $connectionName = 'default';
         $connection = $this->createConnectionMockWithPlatformAndParams(
             PostgreSQL100Platform::class,
             [
@@ -59,7 +64,15 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
 
         $executor = self::createMock(ORMExecutor::class);
 
-        $databaseManager = new PostgreSQLDatabaseManager($consoleManager, $executor, $connection, $logger, $cacheDir);
+        $databaseManager = new PostgreSQLDatabaseManager(
+            $consoleManager,
+            $executor,
+            $connection,
+            $logger,
+            $excludedTables,
+            $cacheDir,
+            $connectionName
+        );
         $databaseManager->saveBackup([]);
     }
 
@@ -68,6 +81,7 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
         $cacheDir = 'some/path';
         $databaseName = 'test_database';
 
+        $connectionName = 'default';
         $connection = $this->createConnectionMockWithPlatformAndParams(
             PostgreSQL100Platform::class,
             [
@@ -82,7 +96,15 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
         $consoleManager = self::createMock(PostgreConsoleManager::class);
         $logger = self::createMock(LoggerInterface::class);
 
-        $databaseManager = new PostgreSQLDatabaseManager($consoleManager, $executor, $connection, $logger, $cacheDir);
+        $databaseManager = new PostgreSQLDatabaseManager(
+            $consoleManager,
+            $executor,
+            $connection,
+            $logger,
+            [],
+            $cacheDir,
+            $connectionName
+        );
         $databaseManager->loadBackup([]);
     }
 
@@ -111,12 +133,13 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
         $logger = self::createMock(LoggerInterface::class);
         $logger->expects($this->once())
             ->method('info')
-            ->with('Database backup loaded', []);
+            ->with('Database backup loaded for default connection', ['fixtures' => ['TestFixture']]);
 
         $executor = self::createMock(ORMExecutor::class);
         $executor->expects($this->once())
             ->method('purge');
 
+        $connectionName = 'default';
         $connection = $this->createConnectionMockWithPlatformAndParams(
             PostgreSQL100Platform::class,
             [
@@ -136,7 +159,15 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
             ->method('executeQuery')
             ->willReturn($queryResult);
 
-        $databaseManager = new PostgreSQLDatabaseManager($consoleManager, $executor, $connection, $logger, $cacheDir);
+        $databaseManager = new PostgreSQLDatabaseManager(
+            $consoleManager,
+            $executor,
+            $connection,
+            $logger,
+            [],
+            $cacheDir,
+            $connectionName
+        );
         $databaseManager->loadBackup(['TestFixture']);
     }
 
@@ -145,6 +176,7 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
         $cacheDir = 'some/path';
         $databaseName = 'test_database';
 
+        $connectionName = 'default';
         $connection = $this->createConnectionMockWithPlatformAndParams(
             PostgreSQL100Platform::class,
             [
@@ -163,14 +195,23 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
             ->method('runMigrations');
 
         $logger = self::createMock(LoggerInterface::class);
-        $logger->expects(self::exactly(2))
+        $logger->expects(self::exactly(3))
             ->method('info')
             ->withConsecutive(
-                ['Database created'],
-                ['Schema created']
+                ['Database created for default connection'],
+                ['Migrations ran for default connection'],
+                ['Schema created for default connection']
             );
 
-        $databaseManager = new PostgreSQLDatabaseManager($consoleManager, $executor, $connection, $logger, $cacheDir);
+        $databaseManager = new PostgreSQLDatabaseManager(
+            $consoleManager,
+            $executor,
+            $connection,
+            $logger,
+            [],
+            $cacheDir,
+            $connectionName
+        );
         $databaseManager->prepareSchema();
     }
 
@@ -178,6 +219,7 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
     {
         $cacheDir = 'some/path';
         $databaseName = 'test_database';
+        $connectionName = 'default';
 
         $connection = $this->createConnectionMockWithPlatformAndParams(
             PostgreSQL100Platform::class,
@@ -197,14 +239,23 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
             ->method('runMigrations');
 
         $logger = self::createMock(LoggerInterface::class);
-        $logger->expects(self::exactly(2))
+        $logger->expects(self::exactly(3))
             ->method('info')
             ->withConsecutive(
-                ['Database created'],
-                ['Schema created']
+                ['Database created for default connection'],
+                ['Migrations ran for default connection'],
+                ['Schema created for default connection']
             );
 
-        $databaseManager = new PostgreSQLDatabaseManager($consoleManager, $executor, $connection, $logger, $cacheDir);
+        $databaseManager = new PostgreSQLDatabaseManager(
+            $consoleManager,
+            $executor,
+            $connection,
+            $logger,
+            [],
+            $cacheDir,
+            $connectionName
+        );
         $databaseManager->prepareSchema();
         $databaseManager->prepareSchema();
     }

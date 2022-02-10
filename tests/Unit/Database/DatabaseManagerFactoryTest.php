@@ -43,7 +43,7 @@ final class DatabaseManagerFactoryTest extends AbstractDatabaseManagerTest
             ->method('getEventManager')
             ->willReturn($eventManager);
 
-        $databaseManager = $this->databaseManagerFactory->createDatabaseManager($entityManager);
+        $databaseManager = $this->databaseManagerFactory->createDatabaseManager($entityManager, [], '', '');
 
         self::assertInstanceOf(PostgreSQLDatabaseManager::class, $databaseManager);
     }
@@ -51,7 +51,7 @@ final class DatabaseManagerFactoryTest extends AbstractDatabaseManagerTest
     public function testCreateSqliteDatabaseManagerSuccess(): void
     {
         $entityManager = $this->createEntityManagerMockWithPlatform(SqlitePlatform::class);
-        $databaseManager = $this->databaseManagerFactory->createDatabaseManager($entityManager);
+        $databaseManager = $this->databaseManagerFactory->createDatabaseManager($entityManager, [], '', '');
 
         self::assertInstanceOf(SqliteDatabaseManager::class, $databaseManager);
     }
@@ -61,7 +61,7 @@ final class DatabaseManagerFactoryTest extends AbstractDatabaseManagerTest
         $entityManager = $this->createEntityManagerMockWithPlatform(MySQLPlatform::class);
 
         $this->expectException(DatabaseManagerNotFoundForCurrentPlatform::class);
-        $this->databaseManagerFactory->createDatabaseManager($entityManager);
+        $this->databaseManagerFactory->createDatabaseManager($entityManager, [], '', '');
     }
 
     /**

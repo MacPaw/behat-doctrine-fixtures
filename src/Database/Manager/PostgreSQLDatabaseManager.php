@@ -65,7 +65,10 @@ class PostgreSQLDatabaseManager extends DatabaseManager
             $additionalParams
         );
 
-        $this->log(sprintf('Database backup saved to file %s', $backupFilename), ['fixtures' => $fixtures]);
+        $this->log(
+            sprintf('Database backup saved to file %s for %s connection', $backupFilename, $this->connectionName),
+            ['fixtures' => $fixtures]
+        );
     }
 
     /**
@@ -88,7 +91,10 @@ class PostgreSQLDatabaseManager extends DatabaseManager
 
         $this->consoleManager->loadDump($backupFilename, $user, $host, $port, $databaseName, $password);
 
-        $this->log('Database backup loaded');
+        $this->log(
+            sprintf('Database backup loaded for %s connection', $this->connectionName),
+            ['fixtures' => $fixtures]
+        );
     }
 
     public function prepareSchema(): void
@@ -106,7 +112,7 @@ class PostgreSQLDatabaseManager extends DatabaseManager
         $this->runMigrations();
 
         $this->schemaCreated = true;
-        $this->log('Schema created');
+        $this->log(sprintf('Schema created for %s connection', $this->connectionName));
     }
 
     private function dropData(): void
@@ -148,7 +154,7 @@ class PostgreSQLDatabaseManager extends DatabaseManager
     {
         $this->consoleManager->runMigrations();
 
-        $this->log(sprintf('Migrations ran for %s connections', $this->connectionName));
+        $this->log(sprintf('Migrations ran for %s connection', $this->connectionName));
     }
 
     protected function getDatabaseName(): string

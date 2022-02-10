@@ -6,7 +6,6 @@ namespace BehatDoctrineFixtures\Context;
 
 use BehatDoctrineFixtures\Database\DatabaseHelperCollection;
 use Behat\Behat\Context\Context;
-use InvalidArgumentException;
 
 class DatabaseContext implements Context
 {

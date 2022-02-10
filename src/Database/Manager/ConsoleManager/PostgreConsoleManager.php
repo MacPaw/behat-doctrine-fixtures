@@ -7,12 +7,12 @@ namespace BehatDoctrineFixtures\Database\Manager\ConsoleManager;
 class PostgreConsoleManager
 {
     private string $cacheDir;
-    private string $runDoctrineMigrationsCommand;
+    private string $runMigrationsCommand;
 
-    public function __construct(string $cacheDir, string $runDoctrineMigrationsCommand)
+    public function __construct(string $cacheDir, string $runMigrationsCommand)
     {
         $this->cacheDir = $cacheDir;
-        $this->runDoctrineMigrationsCommand = $runDoctrineMigrationsCommand;
+        $this->runMigrationsCommand = $runMigrationsCommand;
     }
 
     public function createDump(
@@ -49,7 +49,7 @@ class PostgreConsoleManager
 
     public function runMigrations(): void
     {
-        exec($this->runDoctrineMigrationsCommand);
+        exec($this->runMigrationsCommand);
     }
 
     public function createDatabase(string $connectionName): void

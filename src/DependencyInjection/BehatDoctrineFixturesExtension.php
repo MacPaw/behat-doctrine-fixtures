@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace BehatDoctrineFixtures\DependencyInjection;
 
-use BehatDoctrineFixtures\Context\DatabaseContext;
 use BehatDoctrineFixtures\Database\DatabaseHelper;
 use BehatDoctrineFixtures\Database\DatabaseManagerFactory;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -55,20 +53,21 @@ class BehatDoctrineFixturesExtension extends Extension
         $loader->load('database_manager_factory.xml');
 
         $databaseManagerFactoryDefinition = $container->findDefinition(DatabaseManagerFactory::class);
-        $doctrineManagerRegistry = $container->getParameter('doctrine.entity_managers');
-        foreach ($config['connections'] as $connectionName => $connectionParams){
+        $entityManagers = $container->getParameter('doctrine.entity_managers');
+        foreach ($config['connections'] as $connectionName => $connectionParams) {
             $databaseHelperDefinition = new Definition(DatabaseHelper::class);
             $databaseHelperDefinition->addTag('behat_doctrine_fixtures.database_helper');
             $databaseHelperDefinition
                 ->setArguments([
                     $databaseManagerFactoryDefinition,
-                    new Reference($doctrineManagerRegistry[$connectionName]),
+                    new Reference($entityManagers[$connectionName]),
                     new Reference('fidry_alice_data_fixtures.doctrine.persister_loader'),
                     $connectionParams['databaseFixturesPaths'],
                     $connectionParams['excludedTables'],
                     $connectionParams['runMigrationsCommand'],
                     $connectionName
-                ]);
+                ])
+                ->setPublic(true);
 
             $container->setDefinition(
                 sprintf('behat_doctrine_fixtures.database_helper.%s', $connectionName),

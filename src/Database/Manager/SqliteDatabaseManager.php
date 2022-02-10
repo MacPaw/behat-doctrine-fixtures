@@ -39,7 +39,10 @@ class SqliteDatabaseManager extends DatabaseManager
 
         $this->consoleManager->copy($databasePath, $backupFilename);
 
-        $this->log(sprintf('Database backup saved to file %s', $backupFilename), ['fixtures' => $fixtures]);
+        $this->log(
+            sprintf('Database backup saved to file %s for %s connection', $backupFilename, $this->connectionName),
+            ['fixtures' => $fixtures]
+        );
     }
 
     /**
@@ -56,7 +59,10 @@ class SqliteDatabaseManager extends DatabaseManager
         $this->consoleManager->copy($backupFileName, $databasePath);
         $this->consoleManager->changeMode($databasePath, 0666);
 
-        $this->log('Database backup loaded');
+        $this->log(
+            sprintf('Database backup loaded for %s connection', $this->connectionName),
+            ['fixtures' => $fixtures]
+        );
     }
 
     public function prepareSchema(): void
@@ -90,7 +96,7 @@ class SqliteDatabaseManager extends DatabaseManager
         }
 
         $this->schemaCreated = true;
-        $this->log('Schema created');
+        $this->log(sprintf('Schema created for %s connection', $this->connectionName));
     }
 
     private function adaptDatabaseSchemaToSqlite(Schema $schema): void

@@ -29,7 +29,6 @@ class Configuration implements ConfigurationInterface
     private function addConnectionsSection(NodeBuilder $builder): void
     {
         $builder->arrayNode('connections')
-            ->useAttributeAsKey('connection')
             ->prototype('array')
                 ->children()
                     ->scalarNode('runMigrationsCommand')->cannotBeEmpty()->end()

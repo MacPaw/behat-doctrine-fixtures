@@ -33,10 +33,10 @@ class DatabaseHelperTest extends TestCase
         $container = $this->getContainer();
 
         /** @var DatabaseHelper $databaseHelper */
-        $databaseHelper = $container->get(DatabaseHelper::class);
+        $databaseHelper = $container->get('behat_doctrine_fixtures.database_helper.default');
         $doctrine = $container->get("doctrine");
 
-        $databaseHelper->loadFixtures([__DIR__ . '/../../Fixtures/ORM/BaseEntity.yml']);
+        $databaseHelper->loadFixtures(['BaseEntity']);
 
         /** @var EntityManager $em */
         $em = $doctrine->getManager();

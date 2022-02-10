@@ -6,11 +6,15 @@ namespace BehatDoctrineFixtures\Tests\Integration\DependencyInjection;
 
 use BehatDoctrineFixtures\Context\DatabaseContext;
 use BehatDoctrineFixtures\Database\DatabaseHelper;
+use BehatDoctrineFixtures\Database\DatabaseHelperCollection;
 use BehatDoctrineFixtures\Database\DatabaseManagerFactory;
 use BehatDoctrineFixtures\DependencyInjection\BehatDoctrineFixturesExtension;
+use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\Doctrine\Form\DoctrineOrmExtension;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
@@ -18,7 +22,7 @@ class BehatDoctrineFixturesExtensionTest extends TestCase
 {
     public function testWithEmptyConfig(): void
     {
-        $container = $this->createContainerFromFixture('empty_bundle_config');
+        $container = $this->createContainerFromFixture('min_bundle_config');
 
         $this->expectException(ServiceNotFoundException::class);
         $this->expectExceptionMessage(
@@ -30,18 +34,19 @@ class BehatDoctrineFixturesExtensionTest extends TestCase
 
     public function testWithFullConfig(): void
     {
-        $container = $this->createContainerFromFixture('database_context_bundle_config');
+        $container = $this->createContainerFromFixture('full_bundle_config');
 
-        $databaseHelperDefinition = $container->getDefinition(DatabaseHelper::class);
+        $databaseHelperDefinition = $container->getDefinition('behat_doctrine_fixtures.database_helper.default');
         self::assertSame(DatabaseHelper::class, $databaseHelperDefinition->getClass());
-        self::assertSame(
-            'fidry_alice_data_fixtures.doctrine.persister_loader',
-            (string) $databaseHelperDefinition->getArgument('$fixturesLoader')
-        );
-        self::assertSame(
-            DatabaseManagerFactory::class,
-            (string) $databaseHelperDefinition->getArgument('$databaseManagerFactory')
-        );
+
+        self::assertInstanceOf(Definition::class, $databaseHelperDefinition->getArgument(0));
+        self::assertSame(DatabaseManagerFactory::class, $databaseHelperDefinition->getArgument(0)->getClass());
+
+        self::assertSame('doctrine.orm.default_entity_manager', (string) $databaseHelperDefinition->getArgument(1));
+        self::assertSame('fidry_alice_data_fixtures.doctrine.persister_loader', (string) $databaseHelperDefinition->getArgument(2));
+
+        self::assertSame(['../../../Fixtures'], $databaseHelperDefinition->getArgument(3));
+        self::assertSame(['doctrine_migrations'], $databaseHelperDefinition->getArgument(4));
 
         $databaseManagerFactoryDefinition = $container->getDefinition(DatabaseManagerFactory::class);
         self::assertSame(DatabaseManagerFactory::class, $databaseManagerFactoryDefinition->getClass());
@@ -52,8 +57,8 @@ class BehatDoctrineFixturesExtensionTest extends TestCase
         $databaseContextDefinition = $container->getDefinition(DatabaseContext::class);
         self::assertSame(DatabaseContext::class, $databaseContextDefinition->getClass());
         self::assertSame(
-            DatabaseHelper::class,
-            (string) $databaseContextDefinition->getArgument('$databaseHelper')
+            DatabaseHelperCollection::class,
+            (string) $databaseContextDefinition->getArgument('$databaseHelperCollection')
         );
     }
 
@@ -68,6 +73,9 @@ class BehatDoctrineFixturesExtensionTest extends TestCase
 
         $this->loadFixture($container, $fixtureFile);
 
+        $container->setParameter('doctrine.entity_managers', [
+            "default" => "doctrine.orm.default_entity_manager",
+        ]);
         $container->compile();
 
         return $container;

@@ -36,7 +36,7 @@ class DatabaseManagerFactory
     public function createDatabaseManager(
         EntityManagerInterface $entityManager,
         array $excludedTables,
-        string $runDatabaseMigrationCommand,
+        string $runMigrationCommand,
         string $connectionName
     ): DatabaseManager {
         $databasePlatform = $entityManager->getConnection()->getDatabasePlatform();
@@ -55,7 +55,7 @@ class DatabaseManagerFactory
         }
 
         if ($databasePlatform instanceof PostgreSQL100Platform) {
-            $consoleManager = new PostgreConsoleManager($this->cacheDir, $runDatabaseMigrationCommand);
+            $consoleManager = new PostgreConsoleManager($this->cacheDir, $runMigrationCommand);
             $purger = new ORMPurger($entityManager);
             $executor = new ORMExecutor($entityManager, $purger);
 
