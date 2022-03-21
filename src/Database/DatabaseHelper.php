@@ -47,9 +47,9 @@ class DatabaseHelper
             if (count($fixturesObjects) === 0) {
                 throw new InvalidArgumentException(sprintf('Fixtures were not loaded: %s', implode(', ', $fixtures)));
             }
-
-            $databaseManager->saveBackup($fixtures);
         }
+
+        $databaseManager->saveBackup($fixtures);
 
         $this->entityManager->clear();
     }
