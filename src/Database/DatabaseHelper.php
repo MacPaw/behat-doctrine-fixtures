@@ -54,6 +54,7 @@ class DatabaseHelper
 
         if ($databaseManager->backupExists($fixtures)) {
             $databaseManager->loadBackup($fixtures);
+
             return;
         }
 
@@ -74,14 +75,16 @@ class DatabaseHelper
 
     private function getDatabaseManager(): DatabaseManager
     {
-        return $this->databaseManager !== null
-            ? $this->databaseManager
-            : $this->databaseManagerFactory->createDatabaseManager(
+        if ($this->databaseManager === null) {
+            $this->databaseManager = $this->databaseManagerFactory->createDatabaseManager(
                 $this->entityManager,
                 $this->excludedTables,
                 $this->runMigrationsCommand,
                 $this->connectionName
             );
+        }
+
+        return $this->databaseManager;
     }
 
     private function resolveFixtureAlias(string $fixtureAlias): string

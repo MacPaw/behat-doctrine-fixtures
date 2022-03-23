@@ -18,11 +18,24 @@ class DatabaseContext implements Context
     }
 
     /**
+     * @BeforeScenario
+     */
+    public function beforeScenario(): void
+    {
+        $connectionNameList = $this->databaseHelperCollection->getConnectionNameList();
+
+        foreach ($connectionNameList as $connectionName) {
+            $this->loadFixtures($connectionName, []);
+        }
+    }
+
+    /**
      * @Given I load fixtures :fixtures
      */
     public function loadFixturesForDefaultConnection(string $fixtures): void
     {
-        $this->loadFixtures('default', $fixtures);
+        $fixtureAliases = array_map('trim', explode(',', $fixtures));
+        $this->loadFixtures('default', $fixtureAliases);
     }
 
     /**
@@ -30,12 +43,12 @@ class DatabaseContext implements Context
      */
     public function loadFixturesForGivenConnection(string $fixtures, string $connectionName): void
     {
-        $this->loadFixtures($connectionName, $fixtures);
+        $fixtureAliases = array_map('trim', explode(',', $fixtures));
+        $this->loadFixtures($connectionName, $fixtureAliases);
     }
 
-    public function loadFixtures(string $connectionName, string $fixtures): void
+    public function loadFixtures(string $connectionName, array $fixtureAliases): void
     {
-        $fixtureAliases = array_map('trim', explode(',', $fixtures));
         $this->databaseHelperCollection->getDatabaseHelperByConnectionName($connectionName)
             ->loadFixtures($fixtureAliases);
     }

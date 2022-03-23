@@ -76,11 +76,11 @@ class PostgreSQLDatabaseManager extends DatabaseManager
      */
     public function loadBackup(array $fixtures): void
     {
-        $this->dropData();
-
-        if (empty($fixtures)) {
-            return;
+        if (!$this->schemaCreated) {
+            $this->createSchema();
         }
+
+        $this->dropData();
 
         $backupFilename = $this->getBackupFilename($fixtures);
         $databaseName = $this->getDatabaseName();
@@ -99,11 +99,14 @@ class PostgreSQLDatabaseManager extends DatabaseManager
 
     public function prepareSchema(): void
     {
-        if (!$this->schemaCreated) {
-            $this->createSchema();
+        if ($this->schemaCreated) {
+            $this->loadBackup([]);
+
+            return;
         }
 
-        $this->dropData();
+        $this->createSchema();
+        $this->saveBackup([]);
     }
 
     public function createSchema(): void

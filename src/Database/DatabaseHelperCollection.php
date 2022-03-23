@@ -37,4 +37,9 @@ class DatabaseHelperCollection
 
         return $this->items[$connectionName];
     }
+
+    public function getConnectionNameList(): array
+    {
+        return array_keys($this->items);
+    }
 }

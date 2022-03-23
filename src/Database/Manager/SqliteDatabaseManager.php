@@ -10,6 +10,7 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 class SqliteDatabaseManager extends DatabaseManager
 {
@@ -69,6 +70,8 @@ class SqliteDatabaseManager extends DatabaseManager
     {
         if ($this->schemaCreated) {
             $this->loadBackup([]);
+
+            return;
         }
 
         $this->createSchema();
@@ -80,16 +83,18 @@ class SqliteDatabaseManager extends DatabaseManager
         $schemaTool = new SchemaTool($this->entityManager);
         $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
 
-        $schemaTool->dropDatabase();
-        #todo Think about how to get rid of this try
-        try {
-            $this->connection->executeStatement("DROP table v_product_plan");
-        } catch (\Throwable $ex) {
-        }
-
         $schema = $schemaTool->getSchemaFromMetadata($metadata);
         $this->adaptDatabaseSchemaToSqlite($schema);
+
+        $dropSchemaSql = $schema->toDropSql($this->connection->getDatabasePlatform());
         $createSchemaSql = $schema->toSql($this->connection->getDatabasePlatform());
+
+        foreach ($dropSchemaSql as $sql) {
+            try {
+                $this->connection->executeStatement($sql);
+            } catch (Throwable $exception) {
+            }
+        }
 
         foreach ($createSchemaSql as $sql) {
             $this->connection->executeStatement($sql);

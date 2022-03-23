@@ -54,6 +54,9 @@ class PostgreConsoleManager
 
     public function createDatabase(string $connectionName): void
     {
-        exec(sprintf('bin/console d:d:create --connection=%s --env=test', $connectionName));
+        // phpcs:disable
+        exec(sprintf('bin/console d:d:drop --connection=%s --env=test --force --if-exists --no-interaction', $connectionName));
+        exec(sprintf('bin/console d:d:create --connection=%s --env=test --if-not-exists --no-interaction', $connectionName));
+        // phpcs:enable
     }
 }
