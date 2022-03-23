@@ -6,3 +6,5 @@ parameters:
     checkMissingIterableValueType: false
     paths:
         - src/
+    ignoreErrors:
+        - '#Offset (.*)? does not exist on array\{(.*)?\}.#'
