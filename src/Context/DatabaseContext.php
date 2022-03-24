@@ -49,7 +49,7 @@ class DatabaseContext implements Context
 
     public function loadFixtures(string $connectionName, array $fixtureAliases): void
     {
-        $this->databaseHelperCollection->getDatabaseHelperByConnectionName($connectionName)
-            ->loadFixtures($fixtureAliases);
+        $databaseHelper = $this->databaseHelperCollection->getDatabaseHelperByConnectionName($connectionName);
+        $databaseHelper->loadFixtures($fixtureAliases);
     }
 }
