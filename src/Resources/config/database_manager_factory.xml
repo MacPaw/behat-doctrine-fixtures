@@ -5,6 +5,7 @@
 
     <services>
         <service autowire="true" id="BehatDoctrineFixtures\Database\DatabaseManagerFactory" class="BehatDoctrineFixtures\Database\DatabaseManagerFactory">
+            <argument key="$migrationsStorage" type="service" id="doctrine.migrations.storage.table_storage"/>
             <argument key="$cacheDir">%kernel.cache_dir%</argument>
         </service>
     </services>

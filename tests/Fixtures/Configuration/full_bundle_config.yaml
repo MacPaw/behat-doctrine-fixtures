@@ -3,6 +3,5 @@ behat_doctrine_fixtures:
         default:
             databaseFixturesPaths:
                 - '../../../Fixtures'
-            excludedTables:
-                - 'doctrine_migrations'
             runMigrationsCommand: 'test command'
+            preserveMigrationsData: true

@@ -43,8 +43,6 @@ final class ConfigurationTest extends TestCase
                     'connections' => [
                         'default' => [
                             'databaseFixturesPaths' => ['test/path'],
-                            'excludedTables' => ['migrations'],
-                            'runMigrationsCommand' => 'some command'
                         ]
                     ]
                 ],
@@ -52,8 +50,9 @@ final class ConfigurationTest extends TestCase
                     'connections' => [
                         'default' => [
                             'databaseFixturesPaths' => ['test/path'],
-                            'excludedTables' => ['migrations'],
-                            'runMigrationsCommand' => 'some command'
+                            'runMigrationsCommand' =>
+                                'bin/console d:m:m --env=test --no-interaction --allow-no-migration',
+                            'preserveMigrationsData' => false
                         ]
                     ],
                     'database_context' => true
@@ -65,13 +64,13 @@ final class ConfigurationTest extends TestCase
                     'connections' => [
                         'default' => [
                             'databaseFixturesPaths' => ['test/path'],
-                            'excludedTables' => ['migrations'],
-                            'runMigrationsCommand' => 'some command'
+                            'runMigrationsCommand' => 'some command',
+                            'preserveMigrationsData' => true
                         ],
                         'test' => [
                             'databaseFixturesPaths' => ['test/path'],
-                            'excludedTables' => ['test_migrations'],
-                            'runMigrationsCommand' => 'test command'
+                            'runMigrationsCommand' => 'test command',
+                            'preserveMigrationsData' => true
                         ]
                     ]
                 ],
@@ -80,13 +79,13 @@ final class ConfigurationTest extends TestCase
                     'connections' => [
                         'default' => [
                             'databaseFixturesPaths' => ['test/path'],
-                            'excludedTables' => ['migrations'],
-                            'runMigrationsCommand' => 'some command'
+                            'runMigrationsCommand' => 'some command',
+                            'preserveMigrationsData' => true
                         ],
                         'test' => [
                             'databaseFixturesPaths' => ['test/path'],
-                            'excludedTables' => ['test_migrations'],
-                            'runMigrationsCommand' => 'test command'
+                            'runMigrationsCommand' => 'test command',
+                            'preserveMigrationsData' => true
                         ]
                     ]
                 ]

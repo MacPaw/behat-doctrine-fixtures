@@ -17,9 +17,9 @@ class DatabaseHelper
     private PersisterLoader $fixturesLoader;
     private DatabaseManagerFactory $databaseManagerFactory;
     private array $databaseFixturePaths;
-    private array $excludedTables;
     private string $runMigrationsCommand;
     private string $connectionName;
+    private bool $preserveMigrationsData;
     private ?DatabaseManager $databaseManager = null;
 
     public function __construct(
@@ -27,17 +27,17 @@ class DatabaseHelper
         EntityManagerInterface $entityManager,
         PersisterLoader $fixturesLoader,
         array $databaseFixturePaths,
-        array $excludedTables,
         string $runMigrationsCommand,
-        string $connectionName
+        string $connectionName,
+        bool $preserveMigrationsData
     ) {
         $this->databaseManagerFactory = $databaseManagerFactory;
         $this->entityManager = $entityManager;
         $this->fixturesLoader = $fixturesLoader->withPersister(new ObjectManagerPersister($entityManager));
         $this->databaseFixturePaths = $databaseFixturePaths;
-        $this->excludedTables = $excludedTables;
         $this->runMigrationsCommand = $runMigrationsCommand;
         $this->connectionName = $connectionName;
+        $this->preserveMigrationsData = $preserveMigrationsData;
     }
 
     /**
@@ -78,9 +78,9 @@ class DatabaseHelper
         if ($this->databaseManager === null) {
             $this->databaseManager = $this->databaseManagerFactory->createDatabaseManager(
                 $this->entityManager,
-                $this->excludedTables,
                 $this->runMigrationsCommand,
-                $this->connectionName
+                $this->connectionName,
+                $this->preserveMigrationsData
             );
         }
 

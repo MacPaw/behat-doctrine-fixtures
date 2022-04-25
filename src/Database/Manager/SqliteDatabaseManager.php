@@ -10,7 +10,6 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Psr\Log\LoggerInterface;
-use Throwable;
 
 class SqliteDatabaseManager extends DatabaseManager
 {
@@ -80,28 +79,29 @@ class SqliteDatabaseManager extends DatabaseManager
 
     public function createSchema(): void
     {
-        $schemaTool = new SchemaTool($this->entityManager);
         $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
 
+        $this->dropSchema($metadata);
+
+        $schemaTool = new SchemaTool($this->entityManager);
         $schema = $schemaTool->getSchemaFromMetadata($metadata);
         $this->adaptDatabaseSchemaToSqlite($schema);
 
-        $dropSchemaSql = $schema->toDropSql($this->connection->getDatabasePlatform());
         $createSchemaSql = $schema->toSql($this->connection->getDatabasePlatform());
-
-        foreach ($dropSchemaSql as $sql) {
-            try {
-                $this->connection->executeStatement($sql);
-            } catch (Throwable $exception) {
-            }
-        }
-
         foreach ($createSchemaSql as $sql) {
             $this->connection->executeStatement($sql);
         }
 
         $this->schemaCreated = true;
         $this->log(sprintf('Schema created for %s connection', $this->connectionName));
+    }
+
+    private function dropSchema(array $metadata): void
+    {
+        foreach ($metadata as $classMetadata) {
+            $tableName = $classMetadata->table['name'];
+            $this->connection->executeStatement(sprintf('DROP TABLE IF EXISTS %s', $tableName));
+        }
     }
 
     private function adaptDatabaseSchemaToSqlite(Schema $schema): void

@@ -13,6 +13,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Platforms\PostgreSQL100Platform;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
+use Doctrine\Migrations\Metadata\Storage\TableMetadataStorageConfiguration;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -25,10 +26,11 @@ final class DatabaseManagerFactoryTest extends AbstractDatabaseManagerTest
     {
         parent::setUp();
 
+        $migrationStorageConfiguration = new TableMetadataStorageConfiguration();
         $logger = self::createMock(LoggerInterface::class);
         $cacheDir = 'test/path';
 
-        $this->databaseManagerFactory = new DatabaseManagerFactory($logger, $cacheDir);
+        $this->databaseManagerFactory = new DatabaseManagerFactory($migrationStorageConfiguration, $logger, $cacheDir);
     }
 
     public function testCreatePostgreSQLDatabaseManagerSuccess(): void
@@ -43,7 +45,7 @@ final class DatabaseManagerFactoryTest extends AbstractDatabaseManagerTest
             ->method('getEventManager')
             ->willReturn($eventManager);
 
-        $databaseManager = $this->databaseManagerFactory->createDatabaseManager($entityManager, [], '', '');
+        $databaseManager = $this->databaseManagerFactory->createDatabaseManager($entityManager,'', '', false);
 
         self::assertInstanceOf(PostgreSQLDatabaseManager::class, $databaseManager);
     }
@@ -51,7 +53,7 @@ final class DatabaseManagerFactoryTest extends AbstractDatabaseManagerTest
     public function testCreateSqliteDatabaseManagerSuccess(): void
     {
         $entityManager = $this->createEntityManagerMockWithPlatform(SqlitePlatform::class);
-        $databaseManager = $this->databaseManagerFactory->createDatabaseManager($entityManager, [], '', '');
+        $databaseManager = $this->databaseManagerFactory->createDatabaseManager($entityManager,'', '', false);
 
         self::assertInstanceOf(SqliteDatabaseManager::class, $databaseManager);
     }
@@ -61,7 +63,7 @@ final class DatabaseManagerFactoryTest extends AbstractDatabaseManagerTest
         $entityManager = $this->createEntityManagerMockWithPlatform(MySQLPlatform::class);
 
         $this->expectException(DatabaseManagerNotFoundForCurrentPlatform::class);
-        $this->databaseManagerFactory->createDatabaseManager($entityManager, [], '', '');
+        $this->databaseManagerFactory->createDatabaseManager($entityManager,'', '', false);
     }
 
     /**

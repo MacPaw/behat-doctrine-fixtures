@@ -10,6 +10,7 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\DBAL\Platforms\PostgreSQL100Platform;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
+use Doctrine\Migrations\Metadata\Storage\TableMetadataStorageConfiguration;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use BehatDoctrineFixtures\Database\Exception\DatabaseManagerNotFoundForCurrentPlatform;
@@ -19,25 +20,25 @@ use BehatDoctrineFixtures\Database\Manager\SqliteDatabaseManager;
 
 class DatabaseManagerFactory
 {
+    private TableMetadataStorageConfiguration $migrationsStorage;
     private LoggerInterface $logger;
     private string $cacheDir;
 
     public function __construct(
+        TableMetadataStorageConfiguration $migrationsStorage,
         LoggerInterface $logger,
         string $cacheDir
     ) {
+        $this->migrationsStorage = $migrationsStorage;
         $this->logger = $logger;
         $this->cacheDir = $cacheDir;
     }
 
-    /**
-     * @param array<string> $excludedTables
-     */
     public function createDatabaseManager(
         EntityManagerInterface $entityManager,
-        array $excludedTables,
         string $runMigrationCommand,
-        string $connectionName
+        string $connectionName,
+        bool $preserveMigrationsData
     ): DatabaseManager {
         $databasePlatform = $entityManager->getConnection()->getDatabasePlatform();
         $connection = $entityManager->getConnection();
@@ -64,9 +65,10 @@ class DatabaseManagerFactory
                 $executor,
                 $connection,
                 $this->logger,
-                $excludedTables,
+                $this->migrationsStorage->getTableName(),
                 $this->cacheDir,
-                $connectionName
+                $connectionName,
+                $preserveMigrationsData
             );
         }
 

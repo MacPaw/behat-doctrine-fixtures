@@ -46,7 +46,9 @@ class BehatDoctrineFixturesExtensionTest extends TestCase
         self::assertSame('fidry_alice_data_fixtures.doctrine.persister_loader', (string) $databaseHelperDefinition->getArgument(2));
 
         self::assertSame(['../../../Fixtures'], $databaseHelperDefinition->getArgument(3));
-        self::assertSame(['doctrine_migrations'], $databaseHelperDefinition->getArgument(4));
+        self::assertSame('test command', $databaseHelperDefinition->getArgument(4));
+        self::assertSame('default', $databaseHelperDefinition->getArgument(5));
+        self::assertSame(true, $databaseHelperDefinition->getArgument(6));
 
         $databaseManagerFactoryDefinition = $container->getDefinition(DatabaseManagerFactory::class);
         self::assertSame(DatabaseManagerFactory::class, $databaseManagerFactoryDefinition->getClass());

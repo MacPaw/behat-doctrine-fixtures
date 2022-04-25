@@ -21,12 +21,13 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
     {
         $cacheDir = 'some/path';
         $databaseName = 'test_database';
-        $dumpFilename = sprintf('%s_40cd750bba9870f18aada2478b24840a.sql', $databaseName);
+        $connectionName = 'default';
+        $dumpFilename = sprintf('%s_%s_40cd750bba9870f18aada2478b24840a.sql', $connectionName, $databaseName);
         $password = 'password';
         $user = 'user';
         $host = 'host';
         $port = 5432;
-        $excludedTables = ['migration_versions'];
+        $migrationsTable = 'migration_versions';
         $additionalParams = "--no-comments --disable-triggers --data-only -T migration_versions";
 
         $consoleManager = self::createMock(PostgreConsoleManager::class);
@@ -50,7 +51,6 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
                 ['fixtures' => []]
             );
 
-        $connectionName = 'default';
         $connection = $this->createConnectionMockWithPlatformAndParams(
             PostgreSQL100Platform::class,
             [
@@ -69,9 +69,10 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
             $executor,
             $connection,
             $logger,
-            $excludedTables,
+            $migrationsTable,
             $cacheDir,
-            $connectionName
+            $connectionName,
+            false
         );
         $databaseManager->saveBackup([]);
     }
@@ -80,11 +81,13 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
     {
         $cacheDir = 'some/path';
         $databaseName = 'test_database';
-        $dumpFilename = sprintf('%s_25931488cd5177868a29c6e0328e5fc4.sql', $databaseName);
+        $connectionName = 'default';
+        $dumpFilename = sprintf('%s_%s_25931488cd5177868a29c6e0328e5fc4.sql', $connectionName, $databaseName);
         $password = 'password';
         $user = 'user';
         $host = 'host';
         $port = 5432;
+        $migrationsTable = 'migration_versions';
 
         $consoleManager = self::createMock(PostgreConsoleManager::class);
         $consoleManager->expects($this->once())
@@ -99,12 +102,16 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
             );
 
         $logger = self::createMock(LoggerInterface::class);
-        $logger->expects(self::exactly(4))
+        $logger->expects(self::exactly(5))
             ->method('info')
             ->withConsecutive(
                 ['Database created for default connection'],
                 ['Migrations ran for default connection'],
                 ['Schema created for default connection'],
+                [
+                    'Database backup saved to file some/path/default_test_database_40cd750bba9870f18aada2478b24840a.sql for default connection',
+                    ['fixtures' => []]
+                ],
                 [
                     'Database backup loaded for default connection',
                     ['fixtures' => ['TestFixture']]
@@ -115,7 +122,6 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
         $executor->expects($this->once())
             ->method('purge');
 
-        $connectionName = 'default';
         $connection = $this->createConnectionMockWithPlatformAndParams(
             PostgreSQL100Platform::class,
             [
@@ -140,9 +146,10 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
             $executor,
             $connection,
             $logger,
-            [],
+            $migrationsTable,
             $cacheDir,
-            $connectionName
+            $connectionName,
+            false
         );
         $databaseManager->loadBackup(['TestFixture']);
     }
@@ -151,12 +158,14 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
     {
         $cacheDir = 'some/path';
         $databaseName = 'test_database';
-        $dumpFilename = sprintf('%s_40cd750bba9870f18aada2478b24840a.sql', $databaseName);
+        $connectionName = 'default';
+        $dumpFilename = sprintf('%s_%s_40cd750bba9870f18aada2478b24840a.sql', $connectionName, $databaseName);
         $password = 'password';
         $user = 'user';
         $host = 'host';
         $port = 5432;
-        $additionalParams = "--no-comments --disable-triggers --data-only";
+        $migrationsTable = 'migration_versions';
+        $additionalParams = "--no-comments --disable-triggers --data-only -T migration_versions";
 
         $consoleManager = self::createMock(PostgreConsoleManager::class);
         $consoleManager->expects(self::once())
@@ -175,7 +184,6 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
                 $additionalParams
             );
 
-        $connectionName = 'default';
         $connection = $this->createConnectionMockWithPlatformAndParams(
             PostgreSQL100Platform::class,
             [
@@ -207,9 +215,10 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
             $executor,
             $connection,
             $logger,
-            [],
+            $migrationsTable,
             $cacheDir,
-            $connectionName
+            $connectionName,
+            false
         );
         $databaseManager->prepareSchema();
     }
@@ -219,12 +228,13 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
         $cacheDir = 'some/path';
         $databaseName = 'test_database';
         $connectionName = 'default';
-        $dumpFilename = sprintf('%s_40cd750bba9870f18aada2478b24840a.sql', $databaseName);
+        $dumpFilename = sprintf('%s_%s_40cd750bba9870f18aada2478b24840a.sql', $connectionName, $databaseName);
         $password = 'password';
         $user = 'user';
         $host = 'host';
         $port = 5432;
-        $additionalParams = "--no-comments --disable-triggers --data-only";
+        $migrationsTable = 'migration_versions';
+        $additionalParams = "--no-comments --disable-triggers --data-only -T migration_versions";
 
         $consoleManager = self::createMock(PostgreConsoleManager::class);
         $consoleManager->expects(self::once())
@@ -280,9 +290,10 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
             $executor,
             $connection,
             $logger,
-            [],
+            $migrationsTable,
             $cacheDir,
-            $connectionName
+            $connectionName,
+            false
         );
         $databaseManager->prepareSchema();
         $databaseManager->prepareSchema();
