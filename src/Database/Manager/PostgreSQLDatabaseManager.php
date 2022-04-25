@@ -75,8 +75,10 @@ class PostgreSQLDatabaseManager extends DatabaseManager
     public function loadBackup(array $fixtures): void
     {
         if (!$this->schemaCreated) {
-            $this->prepareSchema();
+            $this->createSchema();
         }
+
+        $this->dropData();
 
         $backupFilename = $this->getBackupFilename($fixtures);
         $databaseName = $this->getDatabaseName();
