@@ -31,7 +31,7 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
         $additionalParams = "--no-comments --disable-triggers --data-only -T migration_versions";
 
         $consoleManager = self::createMock(PostgreConsoleManager::class);
-        $consoleManager->expects($this->once())
+        $consoleManager->expects(self::once())
             ->method('createDump')
             ->with(
                 sprintf('%s/%s', $cacheDir, $dumpFilename),
@@ -44,7 +44,7 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
             );
 
         $logger = self::createMock(LoggerInterface::class);
-        $logger->expects($this->once())
+        $logger->expects(self::once())
             ->method('info')
             ->with(
                 sprintf('Database backup saved to file %s/%s for default connection', $cacheDir, $dumpFilename),
@@ -90,7 +90,7 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
         $migrationsTable = 'migration_versions';
 
         $consoleManager = self::createMock(PostgreConsoleManager::class);
-        $consoleManager->expects($this->once())
+        $consoleManager->expects(self::once())
             ->method('loadDump')
             ->with(
                 sprintf('%s/%s', $cacheDir, $dumpFilename),
@@ -102,16 +102,12 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
             );
 
         $logger = self::createMock(LoggerInterface::class);
-        $logger->expects(self::exactly(5))
+        $logger->expects(self::exactly(4))
             ->method('info')
             ->withConsecutive(
                 ['Database created for default connection'],
                 ['Migrations ran for default connection'],
                 ['Schema created for default connection'],
-                [
-                    'Database backup saved to file some/path/default_test_database_40cd750bba9870f18aada2478b24840a.sql for default connection',
-                    ['fixtures' => []]
-                ],
                 [
                     'Database backup loaded for default connection',
                     ['fixtures' => ['TestFixture']]
@@ -119,7 +115,7 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
             );
 
         $executor = self::createMock(ORMExecutor::class);
-        $executor->expects($this->once())
+        $executor->expects(self::exactly(1))
             ->method('purge');
 
         $connection = $this->createConnectionMockWithPlatformAndParams(
@@ -172,7 +168,7 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
             ->method('createDatabase');
         $consoleManager->expects(self::once())
             ->method('runMigrations');
-        $consoleManager->expects($this->once())
+        $consoleManager->expects(self::once())
             ->method('createDump')
             ->with(
                 sprintf('%s/%s', $cacheDir, $dumpFilename),
@@ -241,7 +237,7 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
             ->method('createDatabase');
         $consoleManager->expects(self::once())
             ->method('runMigrations');
-        $consoleManager->expects($this->once())
+        $consoleManager->expects(self::once())
             ->method('createDump')
             ->with(
                 sprintf('%s/%s', $cacheDir, $dumpFilename),
@@ -265,7 +261,7 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
         );
 
         $executor = self::createMock(ORMExecutor::class);
-        $executor->expects($this->exactly(1))
+        $executor->expects(self::exactly(2))
             ->method('purge');
 
         $logger = self::createMock(LoggerInterface::class);
@@ -276,7 +272,7 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
                 ['Migrations ran for default connection'],
                 ['Schema created for default connection'],
                 [
-                    sprintf('Database backup saved to file %s/%s for default connection', $cacheDir, $dumpFilename),
+                    'Database backup saved to file some/path/default_test_database_40cd750bba9870f18aada2478b24840a.sql for default connection',
                     ['fixtures' => []]
                 ],
                 [
