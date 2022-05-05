@@ -12,3 +12,11 @@ parameters:
 	        message: '#Parameter \#2 ...\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given.#'
 	        count: 1
 	        path: ./src/Database/Manager/PostgreSQLDatabaseManager.php
+	    -
+	        message: '#Offset (.*)? does not exist on array\{(.*)?\}.#'
+	        count: 9
+	        path: ./src/Database/Manager/PostgreSQLDatabaseManager.php
+	    -
+	        message: '#Offset (.*)? does not exist on array\{(.*)?\}.#'
+	        count: 1
+	        path: ./src/Database/Manager/SqliteDatabaseManager.php
