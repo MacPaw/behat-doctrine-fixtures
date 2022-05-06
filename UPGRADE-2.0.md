@@ -33,13 +33,13 @@ After:
 Step 2: Update DatabaseHelper usage
 ---------------------------
 
-If you were using ``DatabaseHelper`` to load fixtures outside the context, now you need to  retrieve ``DatabaseHelperCollection`` from container:
+If you were using ``DatabaseHelper`` to load fixtures outside the context, now you need to retrieve ``DatabaseHelperCollection`` from container:
 ```php
 $databaseHelperCollection = $container->get(DatabaseHelperCollection::class);
 ```
 and then get ``DatabaseHelper`` for your specific connection:
 ```php
-$databaseHelper = $databaseHelperCollection->getDatabaseHelperByConnectionName('default');
+$databaseHelper = $databaseHelperCollection->getDatabaseHelperByConnectionName($connectionName);
 ```
 
 Step 3: Update the bundle
@@ -62,7 +62,7 @@ Then update your dependencies:
 composer update
 ```
 
-Step 5: Review the changes
+Step 4: Review the changes
 --------------------------
 
 It's almost finished!
