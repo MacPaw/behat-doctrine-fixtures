@@ -42,17 +42,17 @@ final class ConfigurationTest extends TestCase
                 [
                     'connections' => [
                         'default' => [
-                            'databaseFixturesPaths' => ['test/path'],
+                            'database_fixtures_paths' => ['test/path'],
                         ]
                     ]
                 ],
                 [
                     'connections' => [
                         'default' => [
-                            'databaseFixturesPaths' => ['test/path'],
-                            'runMigrationsCommand' =>
+                            'database_fixtures_paths' => ['test/path'],
+                            'run_migrations_command' =>
                                 'bin/console d:m:m --env=test --no-interaction --allow-no-migration',
-                            'preserveMigrationsData' => false
+                            'preserve_migrations_data' => false
                         ]
                     ],
                     'database_context' => true
@@ -63,14 +63,14 @@ final class ConfigurationTest extends TestCase
                     'database_context' => false,
                     'connections' => [
                         'default' => [
-                            'databaseFixturesPaths' => ['test/path'],
-                            'runMigrationsCommand' => 'some command',
-                            'preserveMigrationsData' => true
+                            'database_fixtures_paths' => ['test/path'],
+                            'run_migrations_command' => 'some command',
+                            'preserve_migrations_data' => true
                         ],
                         'test' => [
-                            'databaseFixturesPaths' => ['test/path'],
-                            'runMigrationsCommand' => 'test command',
-                            'preserveMigrationsData' => true
+                            'database_fixtures_paths' => ['test/path'],
+                            'run_migrations_command' => 'test command',
+                            'preserve_migrations_data' => true
                         ]
                     ]
                 ],
@@ -78,14 +78,14 @@ final class ConfigurationTest extends TestCase
                     'database_context' => false,
                     'connections' => [
                         'default' => [
-                            'databaseFixturesPaths' => ['test/path'],
-                            'runMigrationsCommand' => 'some command',
-                            'preserveMigrationsData' => true
+                            'database_fixtures_paths' => ['test/path'],
+                            'run_migrations_command' => 'some command',
+                            'preserve_migrations_data' => true
                         ],
                         'test' => [
-                            'databaseFixturesPaths' => ['test/path'],
-                            'runMigrationsCommand' => 'test command',
-                            'preserveMigrationsData' => true
+                            'database_fixtures_paths' => ['test/path'],
+                            'run_migrations_command' => 'test command',
+                            'preserve_migrations_data' => true
                         ]
                     ]
                 ]

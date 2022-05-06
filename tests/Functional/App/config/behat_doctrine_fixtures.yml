@@ -1,6 +1,6 @@
 behat_doctrine_fixtures:
   connections:
     default:
-      runMigrationsCommand: 'bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration'
-      databaseFixturesPaths:
+      run_migrations_command: 'bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration'
+      database_fixtures_paths:
         - '%kernel.project_dir%/Fixtures/ORM'
