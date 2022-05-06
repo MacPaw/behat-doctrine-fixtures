@@ -8,7 +8,7 @@ Step 1: Update configuration file
 
 * There is new option called ``connections`` under the ``behat_doctrine_fixtures``. It receives an array of connection names with necessary options.
 
-* ``behat_doctrine_fixtures.database_context.databaseFixturesPath`` was replaced with ``behat_doctrine_fixtures.connections.<connectionName>.database_fixtures_paths`` and now you can pass an array of paths here.
+* ``behat_doctrine_fixtures.database_context.dataFixturesPath`` was replaced with ``behat_doctrine_fixtures.connections.<connectionName>.database_fixtures_paths`` and now you can pass an array of paths here.
 
 * ``behat_doctrine_fixtures.database_context`` options is now boolean and determines if DatabaseContext will be loaded, default value - ``true``.
 
@@ -26,7 +26,7 @@ After:
     behat_doctrine_fixtures:
       connections:
         default:
-          databaseFixturesPaths:
+          database_fixtures_paths:
             - '%kernel.project_dir%/tests/DataFixtures/ORM'
   ```
 

@@ -67,7 +67,7 @@ Configurating behat database context
 behat_doctrine_fixtures:
   connections:
     default:
-      databaseFixturesPaths:
+      database_fixtures_paths:
         - <path to directory with your fixtures>
 ```
 
@@ -79,11 +79,11 @@ If you want to use multiple databases in your project, just add one more connect
 behat_doctrine_fixtures:
   connections:
     default:
-      databaseFixturesPaths:
+      database_fixtures_paths:
         - <path to directory with your fixtures>
     <secondConnectionName>:
-      runMigrationsCommand: <customMigrationsCommand>
-      databaseFixturesPaths:
+      run_migrations_command: <customMigrationsCommand>
+      database_fixtures_paths:
         - <path to directory with your fixtures>
 ```
 
