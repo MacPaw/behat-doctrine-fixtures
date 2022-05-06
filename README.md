@@ -77,6 +77,7 @@ Go to `behat.yml`
   contexts:
     - BehatDoctrineFixtures\Context\DatabaseContext
 ...
+```
 
 [master Build Status]: https://github.com/macpaw/behat-doctrine-fixtures/actions?query=workflow%3ACI+branch%3Amaster
 [master Build Status Image]: https://github.com/macpaw/behat-doctrine-fixtures/workflows/CI/badge.svg?branch=master

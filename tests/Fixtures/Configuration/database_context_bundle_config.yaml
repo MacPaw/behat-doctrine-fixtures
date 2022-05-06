@@ -1,3 +1,0 @@
-behat_doctrine_fixtures:
-    database_context:
-        dataFixturesPath: '../../../Fixtures'

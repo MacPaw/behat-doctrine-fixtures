@@ -7,17 +7,19 @@ namespace BehatDoctrineFixtures\Database\Manager\ConsoleManager;
 class PostgreConsoleManager
 {
     private string $cacheDir;
+    private string $runMigrationsCommand;
 
-    public function __construct(string $cacheDir)
+    public function __construct(string $cacheDir, string $runMigrationsCommand)
     {
         $this->cacheDir = $cacheDir;
+        $this->runMigrationsCommand = $runMigrationsCommand;
     }
 
     public function createDump(
         string $dumpFilename,
         string $user,
         string $host,
-        string $port,
+        int $port,
         string $databaseName,
         ?string $password = null,
         ?string $additionalParams = null
@@ -27,15 +29,16 @@ class PostgreConsoleManager
             ? ''
             : "PGPASSWORD='{$password}'";
 
-        exec("{$password} pg_dump -U{$user} -h{$host} -p{$port} {$additionalParams} {$databaseName} > 
-            {$dumpFilename} {$appendStderrFile}");
+        // phpcs:disable
+        exec("{$password} pg_dump -U{$user} -h{$host} -p{$port} {$additionalParams} {$databaseName} > {$dumpFilename} {$appendStderrFile}");
+        // phpcs:enable
     }
 
     public function loadDump(
         string $dumpFilename,
         string $user,
         string $host,
-        string $port,
+        int $port,
         string $databaseName,
         ?string $password = null
     ): void {
@@ -46,11 +49,22 @@ class PostgreConsoleManager
 
     public function runMigrations(): void
     {
-        exec('bin/console d:mi:mi --no-interaction');
+        exec($this->runMigrationsCommand);
     }
 
-    public function createDatabase(): void
+    public function createDatabase(string $connectionName): void
     {
-        exec('bin/console d:d:create');
+        exec(sprintf(
+            'bin/console d:d:create --connection=%s --env=test --if-not-exists --no-interaction',
+            $connectionName
+        ));
+    }
+
+    public function dropDatabase(string $connectionName): void
+    {
+        exec(sprintf(
+            'bin/console d:d:drop --connection=%s --env=test --force --if-exists --no-interaction',
+            $connectionName
+        ));
     }
 }
