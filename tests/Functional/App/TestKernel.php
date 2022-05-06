@@ -7,12 +7,6 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class TestKernel extends Kernel
 {
-    private const doctrineConfig = [
-        'dbal' => [
-            'url' =>  'sqlite:///%kernel.cache_dir%/data.db'
-        ]
-    ];
-
     public function __construct()
     {
         parent::__construct('test', false);
@@ -39,6 +33,7 @@ class TestKernel extends Kernel
         $loader->load(__DIR__ . '/config/doctrine.yml');
         $loader->load(__DIR__ . '/config/sensio_framework_extra.yml');
         $loader->load(__DIR__ . '/config/doctrine_migrations.yml');
+        $loader->load(__DIR__ . '/config/behat_doctrine_fixtures.yml');
     }
 
     public function getCacheDir(): string

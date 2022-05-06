@@ -24,8 +24,12 @@ final class SqliteDatabaseManagerTest extends AbstractDatabaseManagerTest
         $logger = self::createMock(LoggerInterface::class);
         $logger->expects($this->once())
             ->method('info')
-            ->with(sprintf('Database backup saved to file %s', $dumpFilename), ['fixtures' => []]);
+            ->with(
+                sprintf('Database backup saved to file %s for default connection', $dumpFilename),
+                ['fixtures' => []]
+            );
 
+        $connectionName = 'default';
         $connection = $this->createConnectionMockWithPlatformAndParams(
             PostgreSQL100Platform::class,
             [
@@ -38,7 +42,14 @@ final class SqliteDatabaseManagerTest extends AbstractDatabaseManagerTest
             ->method('copy')
             ->with($databasePath, $dumpFilename);
 
-        $databaseManager = new SqliteDatabaseManager($consoleManager, $entityManager, $connection, $logger, $cacheDir);
+        $databaseManager = new SqliteDatabaseManager(
+            $consoleManager,
+            $entityManager,
+            $connection,
+            $logger,
+            $cacheDir,
+            $connectionName
+        );
         $databaseManager->saveBackup([]);
     }
 
@@ -55,8 +66,9 @@ final class SqliteDatabaseManagerTest extends AbstractDatabaseManagerTest
         $logger = self::createMock(LoggerInterface::class);
         $logger->expects($this->once())
             ->method('info')
-            ->with('Database backup loaded');
+            ->with('Database backup loaded for default connection');
 
+        $connectionName = 'default';
         $connection = $this->createConnectionMockWithPlatformAndParams(
             PostgreSQL100Platform::class,
             [
@@ -74,7 +86,14 @@ final class SqliteDatabaseManagerTest extends AbstractDatabaseManagerTest
             ->method('changeMode')
             ->with($databasePath, 0666);
 
-        $databaseManager = new SqliteDatabaseManager($consoleManager, $entityManager, $connection, $logger, $cacheDir);
+        $databaseManager = new SqliteDatabaseManager(
+            $consoleManager,
+            $entityManager,
+            $connection,
+            $logger,
+            $cacheDir,
+            $connectionName
+        );
         $databaseManager->loadBackup([]);
     }
 }

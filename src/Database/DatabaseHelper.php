@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BehatDoctrineFixtures\Database;
 
+use BehatDoctrineFixtures\Database\Exception\FixtureFileNotFound;
 use Doctrine\ORM\EntityManagerInterface;
 use Fidry\AliceDataFixtures\Bridge\Doctrine\Persister\ObjectManagerPersister;
 use Fidry\AliceDataFixtures\Loader\PersisterLoader;
@@ -15,27 +16,45 @@ class DatabaseHelper
     private EntityManagerInterface $entityManager;
     private PersisterLoader $fixturesLoader;
     private DatabaseManagerFactory $databaseManagerFactory;
+    private array $databaseFixturePaths;
+    private string $runMigrationsCommand;
+    private string $connectionName;
+    private bool $preserveMigrationsData;
     private ?DatabaseManager $databaseManager = null;
 
     public function __construct(
         DatabaseManagerFactory $databaseManagerFactory,
         EntityManagerInterface $entityManager,
-        PersisterLoader $fixturesLoader
+        PersisterLoader $fixturesLoader,
+        array $databaseFixturePaths,
+        string $runMigrationsCommand,
+        string $connectionName,
+        bool $preserveMigrationsData
     ) {
         $this->databaseManagerFactory = $databaseManagerFactory;
         $this->entityManager = $entityManager;
         $this->fixturesLoader = $fixturesLoader->withPersister(new ObjectManagerPersister($entityManager));
+        $this->databaseFixturePaths = $databaseFixturePaths;
+        $this->runMigrationsCommand = $runMigrationsCommand;
+        $this->connectionName = $connectionName;
+        $this->preserveMigrationsData = $preserveMigrationsData;
     }
 
     /**
-     * @param array<string> $fixtures
+     * @param array<string> $fixtureAliases
      */
-    public function loadFixtures(array $fixtures = []): void
+    public function loadFixtures(array $fixtureAliases = []): void
     {
+        $fixtures = [];
+        foreach ($fixtureAliases as $fixtureAlias) {
+            $fixtures[] = $this->resolveFixtureAlias($fixtureAlias);
+        }
+
         $databaseManager = $this->getDatabaseManager();
 
         if ($databaseManager->backupExists($fixtures)) {
             $databaseManager->loadBackup($fixtures);
+
             return;
         }
 
@@ -56,8 +75,33 @@ class DatabaseHelper
 
     private function getDatabaseManager(): DatabaseManager
     {
-        return $this->databaseManager !== null
-            ? $this->databaseManager
-            : $this->databaseManagerFactory->createDatabaseManager($this->entityManager);
+        if ($this->databaseManager === null) {
+            $this->databaseManager = $this->databaseManagerFactory->createDatabaseManager(
+                $this->entityManager,
+                $this->runMigrationsCommand,
+                $this->connectionName,
+                $this->preserveMigrationsData
+            );
+        }
+
+        return $this->databaseManager;
+    }
+
+    private function resolveFixtureAlias(string $fixtureAlias): string
+    {
+        foreach ($this->databaseFixturePaths as $databaseFixturePath) {
+            $fixture = sprintf('%s/%s.yml', $databaseFixturePath, $fixtureAlias);
+
+            if (is_file($fixture)) {
+                return $fixture;
+            }
+        }
+
+        throw new FixtureFileNotFound($fixtureAlias);
+    }
+
+    public function getConnectionName(): string
+    {
+        return $this->connectionName;
     }
 }

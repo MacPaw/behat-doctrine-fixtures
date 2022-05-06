@@ -13,17 +13,24 @@ class PostgreSQLDatabaseManager extends DatabaseManager
 {
     private ORMExecutor $executor;
     private PostgreConsoleManager $consoleManager;
+    private string $migrationsTable;
+    private bool $preserveMigrationsData;
 
     public function __construct(
         PostgreConsoleManager $consoleManager,
         ORMExecutor $executor,
         Connection $connection,
         LoggerInterface $logger,
-        string $cacheDir
+        string $migrationsTable,
+        string $cacheDir,
+        string $connectionName,
+        bool $preserveMigrationsData
     ) {
-        parent::__construct($connection, $logger, $cacheDir);
+        parent::__construct($connection, $logger, $cacheDir, $connectionName);
         $this->consoleManager = $consoleManager;
         $this->executor = $executor;
+        $this->migrationsTable = $migrationsTable;
+        $this->preserveMigrationsData = $preserveMigrationsData;
     }
 
     /**
@@ -42,8 +49,9 @@ class PostgreSQLDatabaseManager extends DatabaseManager
         $user = $this->connection->getParams()['user'];
         $host = $this->connection->getParams()['host'];
         $port = $this->connection->getParams()['port'];
+
         # Needed for optimization
-        $additionalParams = "--exclude-table=migration_versions --no-comments --disable-triggers --data-only";
+        $additionalParams = sprintf('--no-comments --disable-triggers --data-only -T %s', $this->migrationsTable);
 
         $this->consoleManager->createDump(
             $backupFilename,
@@ -55,7 +63,10 @@ class PostgreSQLDatabaseManager extends DatabaseManager
             $additionalParams
         );
 
-        $this->log(sprintf('Database backup saved to file %s', $backupFilename), ['fixtures' => $fixtures]);
+        $this->log(
+            sprintf('Database backup saved to file %s for %s connection', $backupFilename, $this->connectionName),
+            ['fixtures' => $fixtures]
+        );
     }
 
     /**
@@ -63,11 +74,11 @@ class PostgreSQLDatabaseManager extends DatabaseManager
      */
     public function loadBackup(array $fixtures): void
     {
-        $this->dropData();
-
-        if (empty($fixtures)) {
-            return;
+        if (!$this->schemaCreated) {
+            $this->createSchema();
         }
+
+        $this->dropData();
 
         $backupFilename = $this->getBackupFilename($fixtures);
         $databaseName = $this->getDatabaseName();
@@ -78,26 +89,36 @@ class PostgreSQLDatabaseManager extends DatabaseManager
 
         $this->consoleManager->loadDump($backupFilename, $user, $host, $port, $databaseName, $password);
 
-        $this->log('Database backup loaded');
+        $this->log(
+            sprintf('Database backup loaded for %s connection', $this->connectionName),
+            ['fixtures' => $fixtures]
+        );
     }
 
     public function prepareSchema(): void
     {
-        if (!$this->schemaCreated) {
-            $this->createSchema();
+        if ($this->schemaCreated) {
+            $this->loadBackup([]);
+
+            return;
         }
 
-        $this->dropData();
+        $this->createSchema();
+
+        if (!$this->preserveMigrationsData) {
+            $this->dropData();
+        }
+
+        $this->saveBackup([]);
     }
 
     public function createSchema(): void
     {
-        $this->createDatabase();
-
-        $this->consoleManager->runMigrations();
+        $this->recreateDatabase();
+        $this->runMigrations();
 
         $this->schemaCreated = true;
-        $this->log('Schema created');
+        $this->log(sprintf('Schema created for %s connection', $this->connectionName));
     }
 
     private function dropData(): void
@@ -125,14 +146,28 @@ class PostgreSQLDatabaseManager extends DatabaseManager
     {
         $databaseName = $this->getDatabaseName();
 
-        return sprintf('%s/%s_%s.sql', $this->cacheDir, $databaseName, md5(serialize($fixtures)));
+        return sprintf(
+            '%s/%s_%s_%s.sql',
+            $this->cacheDir,
+            $this->connectionName,
+            $databaseName,
+            md5(serialize($fixtures))
+        );
     }
 
-    private function createDatabase(): void
+    private function recreateDatabase(): void
     {
-        $this->consoleManager->createDatabase();
+        $this->consoleManager->dropDatabase($this->connectionName);
+        $this->consoleManager->createDatabase($this->connectionName);
 
-        $this->log('Database created');
+        $this->log(sprintf('Database created for %s connection', $this->connectionName));
+    }
+
+    private function runMigrations(): void
+    {
+        $this->consoleManager->runMigrations();
+
+        $this->log(sprintf('Migrations ran for %s connection', $this->connectionName));
     }
 
     protected function getDatabaseName(): string
