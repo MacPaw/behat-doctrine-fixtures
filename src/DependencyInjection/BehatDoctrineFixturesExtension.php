@@ -62,10 +62,10 @@ class BehatDoctrineFixturesExtension extends Extension
                     $databaseManagerFactoryDefinition,
                     new Reference($entityManagers[$connectionName]),
                     new Reference('fidry_alice_data_fixtures.doctrine.persister_loader'),
-                    $connectionParams['databaseFixturesPaths'],
-                    $connectionParams['runMigrationsCommand'],
+                    $connectionParams['database_fixtures_paths'],
+                    $connectionParams['run_migrations_command'],
                     $connectionName,
-                    $connectionParams['preserveMigrationsData']
+                    $connectionParams['preserve_migrations_data']
                 ])
                 ->setPublic(true);
 

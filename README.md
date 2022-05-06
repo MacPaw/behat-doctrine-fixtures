@@ -6,6 +6,9 @@ Behat Doctrine Fixtures
 | `master`| [![CI][master Build Status Image]][master Build Status] | [![Coverage Status][master Code Coverage Image]][master Code Coverage] |
 | `develop`| [![CI][develop Build Status Image]][develop Build Status] | [![Coverage Status][develop Code Coverage Image]][develop Code Coverage] |
 
+## Migrate from 1.x to 2.0
+
+[To migrate from 1.x to 2.0, follow our guide.](https://github.com/MacPaw/behat-doctrine-fixtures/blob/master/UPGRADE-2.0.md)
 
 Installation
 ============
@@ -62,11 +65,27 @@ Configurating behat database context
 
 ```yaml
 behat_doctrine_fixtures:
-    database_context:
-        dataFixturesPath: <path to directory with your fixtures>
+  connections:
+    default:
+      databaseFixturesPaths:
+        - <path to directory with your fixtures>
 ```
 
 You don't need to explicitly pass database url here, since this bundle uses doctrine connection under the hood. For now, we support PostgreSQL and Sqlite databases.
+
+If you want to use multiple databases in your project, just add one more connection under ``behat_doctrine_fixtures.connections`` with its own configuration:
+
+```yaml
+behat_doctrine_fixtures:
+  connections:
+    default:
+      databaseFixturesPaths:
+        - <path to directory with your fixtures>
+    <secondConnectionName>:
+      runMigrationsCommand: <customMigrationsCommand>
+      databaseFixturesPaths:
+        - <path to directory with your fixtures>
+```
 
 Step 4: Configure Behat
 =============

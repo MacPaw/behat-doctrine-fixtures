@@ -1,7 +1,7 @@
 behat_doctrine_fixtures:
     connections:
         default:
-            databaseFixturesPaths:
+            database_fixtures_paths:
                 - '../../../Fixtures'
-            runMigrationsCommand: 'test command'
-            preserveMigrationsData: true
+            run_migrations_command: 'test command'
+            preserve_migrations_data: true
