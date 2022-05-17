@@ -5,11 +5,8 @@
 
     <services>
         <service autowire="true" id="BehatDoctrineFixtures\Database\DatabaseManagerFactory" class="BehatDoctrineFixtures\Database\DatabaseManagerFactory">
+            <argument key="$migrationsStorage" type="service" id="doctrine.migrations.storage.table_storage"/>
             <argument key="$cacheDir">%kernel.cache_dir%</argument>
-        </service>
-        <service public="true" autowire="true" id="BehatDoctrineFixtures\Database\DatabaseHelper" class="BehatDoctrineFixtures\Database\DatabaseHelper">
-            <argument key="$databaseManagerFactory" type="service" id="BehatDoctrineFixtures\Database\DatabaseManagerFactory"/>
-            <argument key="$fixturesLoader" type="service" id="fidry_alice_data_fixtures.doctrine.persister_loader"/>
         </service>
     </services>
 </container>

@@ -1,0 +1,2 @@
+behat_doctrine_fixtures:
+    database_context: false
