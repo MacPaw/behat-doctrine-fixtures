@@ -56,6 +56,13 @@ jobs:
                   key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
                   restore-keys: ${{ runner.os }}-${{ matrix.php }}-composer
 
+            - name: Update Symfony version
+              if: matrix.symfony-versions != ''
+              run: |
+                  composer require symfony/dependency-injection:${{ matrix.symfony-versions }} --no-update --no-scripts
+                  composer require symfony/http-kernel:${{ matrix.symfony-versions }} --no-update --no-scripts
+                  composer require --dev symfony/console:${{ matrix.symfony-versions }} --no-update --no-scripts
+
             - name: Install dependencies
               run: composer install
 
