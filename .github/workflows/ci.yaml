@@ -62,6 +62,7 @@ jobs:
                   composer require symfony/dependency-injection:${{ matrix.symfony-versions }} --no-update --no-scripts
                   composer require symfony/http-kernel:${{ matrix.symfony-versions }} --no-update --no-scripts
                   composer require --dev symfony/console:${{ matrix.symfony-versions }} --no-update --no-scripts
+                  composer require --dev sensio/framework-extra-bundle:${{ matrix.symfony-versions }} --no-update --no-scripts
 
             - name: Install dependencies
               run: composer install
