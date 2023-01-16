@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BehatDoctrineFixtures\Tests\Functional\App\DoctrineMigrations;
+namespace BehatDoctrineFixtures\Tests\Functional\App\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
