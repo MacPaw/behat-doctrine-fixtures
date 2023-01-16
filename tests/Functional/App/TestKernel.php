@@ -22,7 +22,6 @@ class TestKernel extends Kernel
             new \Fidry\AliceDataFixtures\Bridge\Symfony\FidryAliceDataFixturesBundle(),
             new \Nelmio\Alice\Bridge\Symfony\NelmioAliceBundle(),
             new \BehatDoctrineFixtures\BehatDoctrineFixturesBundle(),
-            new \Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle()
         ];
 
         return $bundles;
@@ -31,7 +30,6 @@ class TestKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(__DIR__ . '/config/doctrine.yml');
-        $loader->load(__DIR__ . '/config/sensio_framework_extra.yml');
         $loader->load(__DIR__ . '/config/doctrine_migrations.yml');
         $loader->load(__DIR__ . '/config/behat_doctrine_fixtures.yml');
     }

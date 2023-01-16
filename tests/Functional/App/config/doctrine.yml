@@ -8,7 +8,7 @@ doctrine:
     mappings:
       App:
         is_bundle: false
-        type: annotation
-        dir: '%kernel.project_dir%/Entity'
+        type: yml
+        dir: '%kernel.project_dir%/config/doctrine_entity'
         prefix: 'BehatDoctrineFixtures\Tests\Functional\App\Entity'
         alias: App
