@@ -133,9 +133,11 @@ class PostgreSQLDatabaseManager extends DatabaseManager
             ->fetchAllAssociative();
 
         foreach ($sequences as $sequence) {
-            $this->connection->executeStatement(
-                sprintf('ALTER SEQUENCE %s RESTART WITH 1', $sequence['sequence_name'])
-            );
+            $this->connection->executeStatement(sprintf(
+                'ALTER SEQUENCE %s RESTART WITH %s',
+                $sequence['sequence_name'],
+                $sequence['start_value'] ?? 1
+            ));
         }
     }
 
