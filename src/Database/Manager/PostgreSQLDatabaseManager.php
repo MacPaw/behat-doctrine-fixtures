@@ -45,10 +45,10 @@ class PostgreSQLDatabaseManager extends DatabaseManager
         }
 
         $databaseName = $this->getDatabaseName();
-        $password = $this->connection->getParams()['password'];
-        $user = $this->connection->getParams()['user'];
-        $host = $this->connection->getParams()['host'];
-        $port = $this->connection->getParams()['port'];
+        $password = $this->getConnectionParams()['password'];
+        $user = $this->getConnectionParams()['user'];
+        $host = $this->getConnectionParams()['host'];
+        $port = $this->getConnectionParams()['port'];
 
         # Needed for optimization
         $additionalParams = sprintf('--no-comments --disable-triggers --data-only -T %s', $this->migrationsTable);
@@ -82,10 +82,10 @@ class PostgreSQLDatabaseManager extends DatabaseManager
 
         $backupFilename = $this->getBackupFilename($fixtures);
         $databaseName = $this->getDatabaseName();
-        $password = $this->connection->getParams()['password'];
-        $user = $this->connection->getParams()['user'];
-        $host = $this->connection->getParams()['host'];
-        $port = $this->connection->getParams()['port'];
+        $password = $this->getConnectionParams()['password'];
+        $user = $this->getConnectionParams()['user'];
+        $host = $this->getConnectionParams()['host'];
+        $port = $this->getConnectionParams()['port'];
 
         $this->consoleManager->loadDump($backupFilename, $user, $host, $port, $databaseName, $password);
 
@@ -132,10 +132,13 @@ class PostgreSQLDatabaseManager extends DatabaseManager
         $sequences = $this->connection->executeQuery('SELECT * FROM information_schema.sequences')
             ->fetchAllAssociative();
 
+        /** @var array{sequence_name: string, start_value?: string} $sequence */
         foreach ($sequences as $sequence) {
-            $this->connection->executeStatement(
-                sprintf('ALTER SEQUENCE %s RESTART WITH 1', $sequence['sequence_name'])
-            );
+            $this->connection->executeStatement(sprintf(
+                'ALTER SEQUENCE %s RESTART WITH %s',
+                $sequence['sequence_name'],
+                $sequence['start_value'] ?? '1'
+            ));
         }
     }
 
@@ -172,6 +175,14 @@ class PostgreSQLDatabaseManager extends DatabaseManager
 
     protected function getDatabaseName(): string
     {
-        return $this->connection->getParams()['dbname'];
+        return $this->getConnectionParams()['dbname'];
+    }
+
+    private function getConnectionParams(): array
+    {
+        /** @var array{dbname: string, password: string, user: string, host: string, port: int} $connectionParams */
+        $connectionParams = $this->connection->getParams();
+
+        return $connectionParams;
     }
 }
