@@ -29,8 +29,8 @@ class TestKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $loader->load(__DIR__ . '/config/doctrine.yml');
-        $loader->load(__DIR__ . '/config/doctrine_migrations.yml');
+        $loader->load(__DIR__ . '/config/doctrine.php');
+        $loader->load(__DIR__ . '/config/doctrine_migrations.php');
         $loader->load(__DIR__ . '/config/behat_doctrine_fixtures.yml');
     }
 

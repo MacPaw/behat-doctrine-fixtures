@@ -108,9 +108,9 @@ class SqliteDatabaseManager extends DatabaseManager
     {
         foreach ($schema->getTables() as $table) {
             foreach ($table->getColumns() as $column) {
-                if ($column->hasCustomSchemaOption('collation')) {
-                    $column->setCustomSchemaOptions(array_diff_key(
-                        $column->getCustomSchemaOptions(),
+                if ($column->hasPlatformOption('collation')) {
+                    $column->setPlatformOptions(array_diff_key(
+                        $column->getPlatformOptions(),
                         ['collation' => true]
                     ));
                 }
