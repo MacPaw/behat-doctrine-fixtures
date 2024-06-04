@@ -5,6 +5,9 @@
     <entity name="BehatDoctrineFixtures\Tests\Functional\App\Entity\BaseEntity" table="base_entity">
         <id name="id" type="integer">
             <generator strategy="AUTO"/>
+            <options>
+                <option name="collation">utf8_unicode_ci</option>
+            </options>
         </id>
     </entity>
 </doctrine-mapping>

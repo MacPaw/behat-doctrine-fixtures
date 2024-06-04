@@ -8,6 +8,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->extension('doctrine', [
         'dbal' => [
             'url' => 'sqlite:///%kernel.cache_dir%/data.db',
+            'options' => [
+                'collation' => 'utf8mb4_unicode_ci',
+            ],
         ],
         'orm' => [
             'auto_generate_proxy_classes' => true,
