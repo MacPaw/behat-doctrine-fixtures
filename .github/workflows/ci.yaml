@@ -22,16 +22,22 @@ jobs:
                     - '6.1.*'
                     - '6.2.*'
                     - '7.0.*'
+                doctrine-orm-versions:
+                    - '^2.17'
+                    - '^3.0'
                 exclude:
                     - php: '8.1'
                       symfony-versions: '7.0.*'
+                    - doctrine-orm-versions: '^3.0'
+                      symfony-versions: '4.4.*'
                 include:
                     - description: 'Log Code Coverage'
                       php: '8.2'
                       coverage: 'xdebug'
+                      doctrine-orm-versions: '^3.0'
                       symfony-versions: '^7.0'
 
-        name: PHP ${{ matrix.php }} ${{ matrix.description }}
+        name: PHP ${{ matrix.php }} Symfony ${{ matrix.symfony-versions }} Doctrine ${{ matrix.doctrine-orm-versions }} ${{ matrix.description }}
         steps:
             - name: Checkout
               uses: actions/checkout@v2
@@ -66,6 +72,7 @@ jobs:
               run: |
                   composer require symfony/dependency-injection:${{ matrix.symfony-versions }} --no-update --no-scripts
                   composer require symfony/http-kernel:${{ matrix.symfony-versions }} --no-update --no-scripts
+                  composer require doctrine/orm:${{ matrix.doctrine-orm-versions }} --no-update --no-scripts
                   composer require --dev symfony/console:${{ matrix.symfony-versions }} --no-update --no-scripts
                   composer require --dev symfony/property-access:${{ matrix.symfony-versions }} --no-update --no-scripts
 
@@ -80,9 +87,8 @@ jobs:
               run: vendor/bin/phpunit --coverage-clover=coverage.xml
               if: matrix.coverage == 'xdebug'
 
-            - name: Run codecov
-              uses: codecov/codecov-action@v1
+            - name: Upload coverage reports to Codecov
               if: matrix.coverage == 'xdebug'
+              uses: codecov/codecov-action@v4.0.1
               with:
-                  file: './coverage.xml'
-                  fail_ci_if_error: true
+                  token: ${{ secrets.CODECOV_TOKEN }}

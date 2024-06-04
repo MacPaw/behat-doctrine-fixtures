@@ -1,6 +1,0 @@
-BehatDoctrineFixtures\Tests\Functional\App\Entity\BaseEntity:
-  type: entity
-  table: base_entity
-  id:
-    id:
-      type: integer
