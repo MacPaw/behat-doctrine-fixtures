@@ -84,7 +84,7 @@ jobs:
             - name: PHPUnit tests and Log Code coverage
               run: vendor/bin/phpunit --coverage-clover=coverage.xml
               if: matrix.coverage == 'xdebug'
-                
+
             - name: Upload coverage reports to Codecov
               if: matrix.coverage == 'xdebug'
               uses: codecov/codecov-action@v4.0.1
