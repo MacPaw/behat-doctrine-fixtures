@@ -111,7 +111,7 @@ class SqliteDatabaseManager extends DatabaseManager
                 if ($column->hasPlatformOption('collation')) {
                     $column->setPlatformOptions(array_diff_key(
                         $column->getPlatformOptions(),
-                        ['collation' => 'utf8_unicode_ci']
+                        ['collation' => true]
                     ));
                 }
             }
