@@ -17,15 +17,16 @@ class DatabaseHelperTest extends TestCase
     {
         parent::setUp();
 
-        exec('tests/Functional/App/bin/console doctrine:database:create --no-interaction');
-        exec('tests/Functional/App/bin/console d:mi:mi --no-interaction');
+        exec('XDEBUG_MODE=off tests/Functional/App/bin/console doctrine:database:create --no-interaction');
+        exec('XDEBUG_MODE=off tests/Functional/App/bin/console d:mi:mi --no-interaction');
+        exec('rm -rf tests/Functional/App/var/cache/*');
     }
 
     protected function tearDown(): void
     {
         parent::setUp();
 
-        exec('tests/Functional/App/bin/console d:d:d --force --no-interaction');
+        exec('XDEBUG_MODE=off tests/Functional/App/bin/console d:d:d --force --no-interaction');
     }
 
     public function testLoadFixtures(): void
