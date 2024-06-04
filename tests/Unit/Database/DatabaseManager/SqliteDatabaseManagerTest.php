@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace BehatDoctrineFixtures\Tests\Unit\Database\DatabaseManager;
 
-use BehatDoctrineFixtures\Database\DatabaseHelper;
 use BehatDoctrineFixtures\Database\Manager\ConsoleManager\SqliteConsoleManager;
 use BehatDoctrineFixtures\Database\Manager\SqliteDatabaseManager;
-use BehatDoctrineFixtures\Tests\Functional\App\Entity\BaseEntity;
 use BehatDoctrineFixtures\Tests\Unit\Database\AbstractDatabaseManagerTest;
 use Doctrine\DBAL\Platforms\PostgreSQL100Platform;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
