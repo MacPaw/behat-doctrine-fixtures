@@ -8,7 +8,7 @@ use BehatDoctrineFixtures\Database\Manager\ConsoleManager\PostgreConsoleManager;
 use BehatDoctrineFixtures\Database\Manager\ConsoleManager\SqliteConsoleManager;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\DBAL\Platforms\PostgreSQL100Platform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\Migrations\Metadata\Storage\TableMetadataStorageConfiguration;
 use Doctrine\ORM\EntityManagerInterface;
@@ -55,7 +55,7 @@ class DatabaseManagerFactory
             );
         }
 
-        if ($databasePlatform instanceof PostgreSQL100Platform) {
+        if ($databasePlatform instanceof PostgreSQLPlatform) {
             $consoleManager = new PostgreConsoleManager($this->cacheDir, $runMigrationCommand);
             $purger = new ORMPurger($entityManager);
             $executor = new ORMExecutor($entityManager, $purger);
