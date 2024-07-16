@@ -44,6 +44,7 @@ jobs:
                       doctrine-orm-versions: '^3.0'
                       symfony-versions: '^7.0'
                       doctrine-dbal-versions: '^4.0'
+                      coverage: 'none'
 
         name: PHP ${{ matrix.php }} Symfony ${{ matrix.symfony-versions }} Doctrine ${{ matrix.doctrine-orm-versions }} Doctrine Dbal ${{ matrix.doctrine-dbal-versions }} ${{ matrix.description }}
         steps:
