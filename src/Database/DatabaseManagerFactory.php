@@ -9,7 +9,7 @@ use BehatDoctrineFixtures\Database\Manager\ConsoleManager\SqliteConsoleManager;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
-use Doctrine\DBAL\Platforms\SqlitePlatform;
+use Doctrine\DBAL\Platforms\SQLitePlatform;
 use Doctrine\Migrations\Metadata\Storage\TableMetadataStorageConfiguration;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -43,7 +43,7 @@ class DatabaseManagerFactory
         $databasePlatform = $entityManager->getConnection()->getDatabasePlatform();
         $connection = $entityManager->getConnection();
 
-        if ($databasePlatform instanceof SqlitePlatform) {
+        if ($databasePlatform instanceof SQLitePlatform) {
             $consoleManager = new SqliteConsoleManager();
             return new SqliteDatabaseManager(
                 $consoleManager,
