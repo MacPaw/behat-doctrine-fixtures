@@ -38,6 +38,7 @@ jobs:
                       coverage: 'xdebug'
                       doctrine-orm-versions: '^3.0'
                       symfony-versions: '^7.0'
+                      doctrine-dbal-versions: '^3.0'
                     - description: 'Doctrine dbal 4.0 test'
                       php: '8.2'
                       doctrine-orm-versions: '^3.0'
