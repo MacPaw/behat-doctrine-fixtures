@@ -7,7 +7,7 @@ namespace BehatDoctrineFixtures\Tests\Unit\Database\DatabaseManager;
 use BehatDoctrineFixtures\Database\Manager\ConsoleManager\SqliteConsoleManager;
 use BehatDoctrineFixtures\Database\Manager\SqliteDatabaseManager;
 use BehatDoctrineFixtures\Tests\Unit\Database\AbstractDatabaseManagerTest;
-use Doctrine\DBAL\Platforms\PostgreSQL100Platform;
+use Doctrine\DBAL\Platforms\SQLitePlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -31,7 +31,7 @@ final class SqliteDatabaseManagerTest extends AbstractDatabaseManagerTest
 
         $connectionName = 'default';
         $connection = $this->createConnectionMockWithPlatformAndParams(
-            PostgreSQL100Platform::class,
+            SQLitePlatform::class,
             [
                 'path' => $databasePath
             ]
@@ -70,7 +70,7 @@ final class SqliteDatabaseManagerTest extends AbstractDatabaseManagerTest
 
         $connectionName = 'default';
         $connection = $this->createConnectionMockWithPlatformAndParams(
-            PostgreSQL100Platform::class,
+            SQLitePlatform::class,
             [
                 'path' => $databasePath
             ]
