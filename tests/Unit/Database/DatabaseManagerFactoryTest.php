@@ -9,9 +9,8 @@ use BehatDoctrineFixtures\Database\Exception\DatabaseManagerNotFoundForCurrentPl
 use BehatDoctrineFixtures\Database\Manager\PostgreSQLDatabaseManager;
 use BehatDoctrineFixtures\Database\Manager\SqliteDatabaseManager;
 use Doctrine\Common\EventManager;
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
-use Doctrine\DBAL\Platforms\PostgreSQL100Platform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\Migrations\Metadata\Storage\TableMetadataStorageConfiguration;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,7 +34,7 @@ final class DatabaseManagerFactoryTest extends AbstractDatabaseManagerTest
 
     public function testCreatePostgreSQLDatabaseManagerSuccess(): void
     {
-        $entityManager = $this->createEntityManagerMockWithPlatform(PostgreSQL100Platform::class);
+        $entityManager = $this->createEntityManagerMockWithPlatform(PostgreSQLPlatform::class);
 
         $eventManager = self::createMock(EventManager::class);
         $eventManager->expects(self::once())

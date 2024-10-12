@@ -8,11 +8,8 @@ use BehatDoctrineFixtures\Database\Manager\ConsoleManager\PostgreConsoleManager;
 use BehatDoctrineFixtures\Database\Manager\PostgreSQLDatabaseManager;
 use BehatDoctrineFixtures\Tests\Unit\Database\AbstractDatabaseManagerTest;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\PostgreSQL100Platform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Result;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
@@ -52,7 +49,7 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
             );
 
         $connection = $this->createConnectionMockWithPlatformAndParams(
-            PostgreSQL100Platform::class,
+            PostgreSQLPlatform::class,
             [
                 'password' => $password,
                 'user' => $user,
@@ -119,7 +116,7 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
             ->method('purge');
 
         $connection = $this->createConnectionMockWithPlatformAndParams(
-            PostgreSQL100Platform::class,
+            PostgreSQLPlatform::class,
             [
                 'password' => $password,
                 'user' => $user,
@@ -181,7 +178,7 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
             );
 
         $connection = $this->createConnectionMockWithPlatformAndParams(
-            PostgreSQL100Platform::class,
+            PostgreSQLPlatform::class,
             [
                 'password' => $password,
                 'user' => $user,
@@ -250,7 +247,7 @@ final class PostgreSQLDatabaseManagerTest extends AbstractDatabaseManagerTest
             );
 
         $connection = $this->createConnectionMockWithPlatformAndParams(
-            PostgreSQL100Platform::class,
+            PostgreSQLPlatform::class,
             [
                 'password' => $password,
                 'user' => $user,

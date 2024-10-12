@@ -1,102 +1,37 @@
-Behat Doctrine Fixtures
-=================================
+# Behat Doctrine Fixtures
 
 | Version | Build Status | Code Coverage |
 |:---------:|:-------------:|:-----:|
 | `master`| [![CI][master Build Status Image]][master Build Status] | [![Coverage Status][master Code Coverage Image]][master Code Coverage] |
 | `develop`| [![CI][develop Build Status Image]][develop Build Status] | [![Coverage Status][develop Code Coverage Image]][develop Code Coverage] |
 
+## Installation
+To install the Behat Doctrine Fixtures and integrate it with your Behat setup, follow the instructions provided in the [Installation Guide](docs/install.md).
+
+## Database Support
+This library allows you to easily work with fixtures for testing in Behat using Doctrine. It supports two types of databases:
+
+* [How to configure SQLite](docs/configure_sqlite.md)  – a lightweight and fast database for testing.
+* [How to configure PostgreSQL](docs/configure_postgre.md) – a powerful and popular relational database for production-like environments.
+* [How multiple databases](docs/configure_multiple_databases.md) - To configure multiple databases, define separate connection settings for each database in your Doctrine configuration and reference them appropriately in your application.
+
+## How Usage in Behat
+These methods can be used in Behat scenarios to load fixtures into the database, preparing test data for scenarios. For more detailed information on each method, refer to the links above.
+
+### Methods
+
+#### [beforeScenario](docs/DatabaseContext/beforeScenario.md)
+The `beforeScenario` method loads fixtures for all configured database connections before each Behat scenario. This ensures that the database is in a clean state before testing.
+
+#### [loadFixturesForDefaultConnection](docs/DatabaseContext/loadFixturesForDefaultConnection.md)
+The `loadFixturesForDefaultConnection` method loads fixtures into the default database connection. It accepts a comma-separated list of fixture names and loads them into the default connection.
+
+#### [loadFixturesForGivenConnection](docs/DatabaseContext/loadFixturesForGivenConnection.md)
+The `loadFixturesForGivenConnection` method loads fixtures into a specified database connection. This method allows flexibility by letting you choose which database connection the fixtures should be loaded into, which is useful in multi-database environments.
+
 ## Migrate from 1.x to 2.0
 
 [To migrate from 1.x to 2.0, follow our guide.](https://github.com/MacPaw/behat-doctrine-fixtures/blob/master/UPGRADE-2.0.md)
-
-Installation
-============
-
-Step 1: Install Bundle
-----------------------------------
-Open a command console, enter your project directory and execute:
-
-```console
-$ composer require --dev macpaw/behat-doctrine-fixtures
-```
-
-This command requires you to have Composer installed globally, as explained
-in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
-of the Composer documentation.
-
-If you use PostgreSQL database, you also need to install postgresql-client:
-
-```console
-$ apt-get install -y postgresql-client
-```
-
-Step 2: Enable the Bundle
-----------------------------------
-Then, enable the bundle by adding it to the list of registered bundles
-in the `app/AppKernel.php` file of your project:
-
-```php
-<?php
-// app/AppKernel.php
-
-// ...
-class AppKernel extends Kernel
-{
-    public function registerBundles()
-    {
-        $bundles = array(
-            // ...
-            BehatDoctrineFixtures\BehatDoctrineFixturesBundle::class => ['test' => true]
-        );
-
-        // ...
-    }
-
-    // ...
-}
-```
-
-Step 3: Create Behat Doctrine Fixtures Config:
-----------------------------------
-`config/packages/test/behat_doctrine_fixtures.yaml `
-
-Configurating behat database context
-
-```yaml
-behat_doctrine_fixtures:
-  connections:
-    default:
-      database_fixtures_paths:
-        - <path to directory with your fixtures>
-```
-
-You don't need to explicitly pass database url here, since this bundle uses doctrine connection under the hood. For now, we support PostgreSQL and Sqlite databases.
-
-If you want to use multiple databases in your project, just add one more connection under ``behat_doctrine_fixtures.connections`` with its own configuration:
-
-```yaml
-behat_doctrine_fixtures:
-  connections:
-    default:
-      database_fixtures_paths:
-        - <path to directory with your fixtures>
-    <secondConnectionName>:
-      run_migrations_command: <customMigrationsCommand>
-      database_fixtures_paths:
-        - <path to directory with your fixtures>
-```
-
-Step 4: Configure Behat
-=============
-Go to `behat.yml`
-
-```yaml
-...
-  contexts:
-    - BehatDoctrineFixtures\Context\DatabaseContext
-...
-```
 
 [master Build Status]: https://github.com/macpaw/behat-doctrine-fixtures/actions?query=workflow%3ACI+branch%3Amaster
 [master Build Status Image]: https://github.com/macpaw/behat-doctrine-fixtures/workflows/CI/badge.svg?branch=master
